@@ -130,6 +130,28 @@
       </div>
       <span id="memoryControllerBadge" class="memory-badge">확인 중</span>
     </div>
+<div id="lifecyclePanel" class="memory-controller-block lifecycle-panel lifecycle-card" aria-labelledby="lifecycleTitle">
+    <div class="lifecycle-head">
+      <div>
+        <div class="eyebrow">LIFECYCLE</div>
+        <h2 id="lifecycleTitle">장기 기억 유지 상태</h2>
+      </div>
+      <span class="lifecycle-badge">H-09</span>
+    </div>
+    <p id="lifecycleStatus" class="lifecycle-status" role="status" aria-live="polite">장기 기억과 백업 주기를 확인하고 있습니다.</p>
+    <div class="lifecycle-grid" aria-label="장기 기억 유지 상태">
+      <div><b>마지막 성공 저장</b><span id="lifecycleLastSave">없음</span></div>
+      <div><b>다음 권장일</b><span id="lifecycleNextSave">확인 중</span></div>
+      <div><b>경과일</b><span id="lifecycleElapsedDays">0일</span></div>
+      <div><b>새 채팅 주기</b><span id="lifecycleNewChatCycle">0/4</span></div>
+      <div class="lifecycle-grid-wide"><b>Backup 상태</b><span id="lifecycleBackupState">검증된 백업 없음</span></div>
+    </div>
+    <div class="lifecycle-actions">
+      <button id="btnLifecyclePostpone" class="memory-secondary" type="button" hidden>이번 업데이트 미루기</button>
+      <button id="btnLifecycleNewChatAck" class="memory-secondary" type="button" hidden>새 채팅 시작함 · 주기 초기화</button>
+    </div>
+    <small class="lifecycle-note">약 7일마다 현재 장기 기억 업데이트를 한 번 권장합니다. 밀린 기간은 여러 건으로 소급하지 않습니다. 성공 저장 4회마다 새 ChatGPT 채팅을 권장하며, 시계·시간대 이상은 안내만 하고 USER 데이터를 자동 변경하지 않습니다.</small>
+</div>
     <p id="memoryControllerStatus" class="memory-controller-status">IndexedDB 상태를 확인하고 있습니다.</p>
     <a class="memory-diagnostic-link" href="device_gate.html">실기기 IndexedDB 진단 열기</a>
 
@@ -158,31 +180,6 @@
   </div>
 </section>
 
-
-<section id="lifecyclePanel" class="section lifecycle-panel" aria-labelledby="lifecycleTitle">
-  <div class="card lifecycle-card">
-    <div class="lifecycle-head">
-      <div>
-        <div class="eyebrow">LIFECYCLE</div>
-        <h2 id="lifecycleTitle">장기 기억 유지 상태</h2>
-      </div>
-      <span class="lifecycle-badge">H-09</span>
-    </div>
-    <p id="lifecycleStatus" class="lifecycle-status" role="status" aria-live="polite">장기 기억과 백업 주기를 확인하고 있습니다.</p>
-    <div class="lifecycle-grid" aria-label="장기 기억 유지 상태">
-      <div><b>마지막 성공 저장</b><span id="lifecycleLastSave">없음</span></div>
-      <div><b>다음 권장일</b><span id="lifecycleNextSave">확인 중</span></div>
-      <div><b>경과일</b><span id="lifecycleElapsedDays">0일</span></div>
-      <div><b>새 채팅 주기</b><span id="lifecycleNewChatCycle">0/4</span></div>
-      <div class="lifecycle-grid-wide"><b>Backup 상태</b><span id="lifecycleBackupState">검증된 백업 없음</span></div>
-    </div>
-    <div class="lifecycle-actions">
-      <button id="btnLifecyclePostpone" class="memory-secondary" type="button" hidden>이번 업데이트 미루기</button>
-      <button id="btnLifecycleNewChatAck" class="memory-secondary" type="button" hidden>새 채팅 시작함 · 주기 초기화</button>
-    </div>
-    <small class="lifecycle-note">약 7일마다 현재 장기 기억 업데이트를 한 번 권장합니다. 밀린 기간은 여러 건으로 소급하지 않습니다. 성공 저장 4회마다 새 ChatGPT 채팅을 권장하며, 시계·시간대 이상은 안내만 하고 USER 데이터를 자동 변경하지 않습니다.</small>
-  </div>
-</section>
 
 <section id="dataSafety" class="section data-safety" aria-labelledby="dataSafetyTitle">
   <div class="card data-safety-card">
