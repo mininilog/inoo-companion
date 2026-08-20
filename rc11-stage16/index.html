@@ -158,6 +158,32 @@
   </div>
 </section>
 
+
+<section id="lifecyclePanel" class="section lifecycle-panel" aria-labelledby="lifecycleTitle">
+  <div class="card lifecycle-card">
+    <div class="lifecycle-head">
+      <div>
+        <div class="eyebrow">LIFECYCLE</div>
+        <h2 id="lifecycleTitle">장기 기억 유지 상태</h2>
+      </div>
+      <span class="lifecycle-badge">H-09</span>
+    </div>
+    <p id="lifecycleStatus" class="lifecycle-status" role="status" aria-live="polite">장기 기억과 백업 주기를 확인하고 있습니다.</p>
+    <div class="lifecycle-grid" aria-label="장기 기억 유지 상태">
+      <div><b>마지막 성공 저장</b><span id="lifecycleLastSave">없음</span></div>
+      <div><b>다음 권장일</b><span id="lifecycleNextSave">확인 중</span></div>
+      <div><b>경과일</b><span id="lifecycleElapsedDays">0일</span></div>
+      <div><b>새 채팅 주기</b><span id="lifecycleNewChatCycle">0/4</span></div>
+      <div class="lifecycle-grid-wide"><b>Backup 상태</b><span id="lifecycleBackupState">검증된 백업 없음</span></div>
+    </div>
+    <div class="lifecycle-actions">
+      <button id="btnLifecyclePostpone" class="memory-secondary" type="button" hidden>이번 업데이트 미루기</button>
+      <button id="btnLifecycleNewChatAck" class="memory-secondary" type="button" hidden>새 채팅 시작함 · 주기 초기화</button>
+    </div>
+    <small class="lifecycle-note">약 7일마다 현재 장기 기억 업데이트를 한 번 권장합니다. 밀린 기간은 여러 건으로 소급하지 않습니다. 성공 저장 4회마다 새 ChatGPT 채팅을 권장하며, 시계·시간대 이상은 안내만 하고 USER 데이터를 자동 변경하지 않습니다.</small>
+  </div>
+</section>
+
 <section id="dataSafety" class="section data-safety" aria-labelledby="dataSafetyTitle">
   <div class="card data-safety-card">
     <div class="data-safety-head">
@@ -203,19 +229,14 @@
           <button id="btnPurgeApply" class="purge-danger" type="button" hidden>확인하고 sanitized NEW ROOT 생성</button>
         </div>
       </div>
-      <div id="replicaTransfer" class="replica-transfer" aria-labelledby="replicaTransferTitle">
-        <div class="replica-transfer-head"><b id="replicaTransferTitle">Replica Transfer / Conflict</b><span>H-08 · manual portable transfer · no real-time sync</span></div>
-        <p id="replicaTransferStatus" class="replica-transfer-status" role="status" aria-live="polite">Standard Backup을 이용한 manual transfer를 준비하고 있습니다.</p>
-        <p id="replicaIdentityStatus" class="replica-identity-status">현재 storage container replica를 확인하고 있습니다.</p>
-        <p class="replica-transfer-note"><b>replica_id는 물리 기기 ID가 아닙니다.</b> Safari·홈 화면 PWA·Android 브라우저/설치형 Web App이 같은 저장 컨테이너를 공유할 수도, 분리될 수도 있으므로 자동 추정하지 않습니다.</p>
-        <label class="action recovery-file-action replica-transfer-file"><span>Standard Backup 선택 · Transfer / Conflict 검사</span><input id="replicaTransferFile" type="file" accept=".json,application/json"></label>
-        <div id="replicaTransferPreview" class="memory-review recovery-preview replica-transfer-preview" hidden></div>
-        <button id="btnReplicaTransferApply" class="memory-primary" type="button" hidden>검증된 Transfer / Merge 적용</button>
-        <div class="replica-conflict-actions">
-          <button id="btnReplicaKeepLocal" class="memory-secondary" type="button" hidden>local 유지 · 저장 안 함</button>
-          <button id="btnReplicaUseIncoming" class="replica-incoming-danger" type="button" hidden>incoming 선택 · 새 revision 생성</button>
-        </div>
-        <small class="replica-transfer-foot">revision 숫자가 더 크다는 이유만으로 덮어쓰지 않습니다. deterministic safe case만 자동 merge 후보가 되며 충돌은 사용자가 확인합니다.</small>
+      <div id="transferSafety" class="transfer-safety" aria-labelledby="transferSafetyTitle">
+        <div class="transfer-safety-head"><b id="transferSafetyTitle">Transfer / Conflict</b><span>H-08 · manual portable replica transfer</span></div>
+        <p id="transferSafetyStatus" class="transfer-safety-status" role="status" aria-live="polite">replica/lineage 관계를 확인하고 있습니다.</p>
+        <label class="action recovery-file-action transfer-file-action"><span>Standard Backup 선택 · Transfer 검사</span><input id="replicaTransferFile" type="file" accept=".json,application/json" disabled></label>
+        <div id="transferPreview" class="memory-review recovery-preview" hidden></div>
+        <div id="transferConflicts" class="transfer-conflicts" hidden></div>
+        <button id="btnTransferApply" class="memory-primary" type="button" hidden>확인하고 새 revision으로 Transfer / Merge</button>
+        <small class="transfer-no-sync">수동 파일 전송만 지원합니다. revision 숫자만으로 덮어쓰지 않으며 실시간 동기화를 주장하지 않습니다.</small>
       </div>
     </details>
   </div>
@@ -246,5 +267,5 @@
 <div class="fine"><div id="loginNote">ChatGPT에서 대화하려면 로그인이 필요할 수 있습니다.</div><div id="installNote">홈 화면 추가는 선택사항입니다. 설치하지 않아도 사용할 수 있어요.</div><div id="notice">비공식 · 공개 자료 기반 팬 컴패니언</div></div>
 </section>
 </main>
-<script src="logic.js"></script><script src="storage.js"></script><script src="integrity_foundation.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="recovery.js"></script><script src="history.js"></script><script src="transfer.js"></script><script src="controller_ui.js"></script>
+<script src="logic.js"></script><script src="storage.js"></script><script src="integrity_foundation.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="lifecycle.js"></script><script src="recovery.js"></script><script src="history.js"></script><script src="transfer.js"></script><script src="controller_ui.js"></script>
 </body></html>

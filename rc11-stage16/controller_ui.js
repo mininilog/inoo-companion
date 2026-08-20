@@ -446,6 +446,10 @@ async function initControllerUI(){
           if(status)status.textContent="커밋 결과를 확정할 수 없습니다. 같은 변경을 바로 재시도하지 마세요.";
           return;
         }
+        if(global.InooLifecycle&&typeof global.InooLifecycle.noteMemorySaveSuccess==="function"){
+          await global.InooLifecycle.noteMemorySaveSuccess(db,{privateSession:!!(sessionPacket&&sessionPacket.private_session)});
+          if(global.dispatchEvent)global.dispatchEvent(new CustomEvent("inoo:lifecycle-changed",{detail:{kind:"memory_save_success"}}));
+        }
         clearConversationState();
         await refresh();
         if(status)status.textContent="장기 기억 저장을 확인했습니다. 다음 세션부터 새 기억이 반영됩니다.";

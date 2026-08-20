@@ -510,7 +510,7 @@ function wire(){
  $$("[data-mode]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.mode==="random"){randomQuick();return}commitState(L.applyPreset(state,b.dataset.mode),true);setStatus(modeLabel(b.dataset.mode)+" · "+tr("selected"),"ok")}));
  $$("select[data-key]").forEach(s=>s.addEventListener("change",()=>update({[s.dataset.key]:s.value})));
  $("#year_timeslip").addEventListener("change",e=>update({year_timeslip:e.target.value}));
- $("#private_session").addEventListener("change",e=>{update({private_session:e.target.checked});renderContinuity()});
+ $("#private_session").addEventListener("change",e=>{update({private_session:e.target.checked});renderContinuity();if(globalThis.dispatchEvent)globalThis.dispatchEvent(new CustomEvent("inoo:lifecycle-changed",{detail:{kind:"private_session_changed"}}));});
  $("#copyBtn").addEventListener("click",doCopy);
  $("#btnSaveFavorite").addEventListener("click",saveFavorite);
  $("#favoritesList").addEventListener("click",e=>handleFavoriteAction(e.target));

@@ -194,11 +194,22 @@ function sourceMetadata(runtimeConfig,snapshot,storageApi){
 function emptyPortableState(){
   return Object.freeze({policy_version:PORTABLE_STATE_POLICY_VERSION,feature_state:Object.freeze([]),lifecycle:Object.freeze([])});
 }
-function assertPortableState(value){
+async function collectPortableState(db,{lifecycleApi=global.InooLifecycle}={}){
+  const lifecycle=[];
+  if(lifecycleApi&&typeof lifecycleApi.exportPortableRecord==="function"){
+    const row=await lifecycleApi.exportPortableRecord(db);
+    if(row)lifecycle.push(clone(row));
+  }
+  return Object.freeze({policy_version:PORTABLE_STATE_POLICY_VERSION,feature_state:Object.freeze([]),lifecycle:Object.freeze(lifecycle)});
+}
+function assertPortableState(value,{lifecycleApi=global.InooLifecycle}={}){
   exactKeys(value,new Set(["policy_version","feature_state","lifecycle"]),"backup_portable_state_invalid");
   if(value.policy_version!==PORTABLE_STATE_POLICY_VERSION||!Array.isArray(value.feature_state)||!Array.isArray(value.lifecycle))throw recoveryError("backup_portable_state_invalid");
-  // H-06 intentionally has no approved portable feature/lifecycle records yet. Future additions require an explicit contract + migration path.
-  if(value.feature_state.length||value.lifecycle.length)throw recoveryError("backup_portable_state_unsupported");
+  if(value.feature_state.length)throw recoveryError("backup_portable_state_unsupported");
+  if(value.lifecycle.length>1)throw recoveryError("backup_portable_state_unsupported");
+  if(value.lifecycle.length){
+    if(!lifecycleApi||typeof lifecycleApi.portableRecordValid!=="function"||!lifecycleApi.portableRecordValid(value.lifecycle[0]))throw recoveryError("backup_portable_state_unsupported");
+  }
   return value;
 }
 function assertRollbackWindow(value){
@@ -291,7 +302,7 @@ async function createStandardBackup(db,{
     source:sourceMetadata(runtimeConfig,verified.snapshot,storageApi),
     persona_dependency:clone(personaDependency),
     canonical_user:{head:clone(verified.head),snapshot:clone(verified.snapshot)},
-    portable_state:clone(emptyPortableState()),
+    portable_state:clone(await collectPortableState(db)),
     rollback_window:clone(rollbackWindow)
   };
   const bundle={
@@ -457,6 +468,11 @@ async function commitRestorePreview(db,previewId,{
     return Object.freeze({status:"COMMIT_UNKNOWN",outcome:"readback_mismatch",operation_id:entry.operationId,verify_code:verified&&verified.code||null});
   }
   userStateApi.validateCanonicalState(verified.snapshot.payload);
+  const lifecycleRows=entry.bundle.recovery_payload.portable_state&&entry.bundle.recovery_payload.portable_state.lifecycle||[];
+  if(lifecycleRows.length&&global.InooLifecycle&&typeof global.InooLifecycle.importPortableRecord==="function"){
+    try{await global.InooLifecycle.importPortableRecord(db,lifecycleRows[0]);}
+    catch(e){return Object.freeze({status:"COMMIT_UNKNOWN",outcome:"lifecycle_restore_failed_after_user_commit",operation_id:entry.operationId,error_code:e&&e.code||String(e)});}
+  }
   previewRegistry.delete(previewId);
   return Object.freeze({status:"SUCCESS",outcome:committed&&committed.status==="already_committed"?"already_committed":"restored",operation_id:entry.operationId,revision:verified.head.revision});
 }
@@ -560,8 +576,8 @@ function humanError(code){
     backup_snapshot_hash_mismatch:"백업 snapshot 해시가 맞지 않습니다. 복원하지 않았습니다.",
     restore_persona_dependency_mismatch:"현재 Persona package가 이 백업의 dependency와 다릅니다. 복원하지 않았습니다.",
     restore_persona_dependency_unavailable:"현재 Persona 무결성이 확인되지 않아 Standard Restore를 진행할 수 없습니다. Raw Recovery Export는 사용할 수 있습니다.",
-    restore_cross_lineage_requires_transfer:"다른 lineage의 백업입니다. H-08 Transfer/Conflict 단계 전에는 자동 덮어쓰지 않습니다.",
-    restore_existing_cross_replica_requires_conflict:"현재 데이터가 있는 다른 replica의 백업입니다. H-08 Conflict 확인 경로 전에는 기존 canonical USER를 덮어쓰지 않습니다.",
+    restore_cross_lineage_requires_transfer:"다른 lineage의 백업입니다. Standard Restore로 덮어쓰지 않고 아래 Transfer / Conflict 경로에서 명시적으로 검토하세요.",
+    restore_existing_cross_replica_requires_conflict:"현재 데이터가 있는 다른 replica의 백업입니다. Standard Restore로 덮어쓰지 않고 아래 Transfer / Conflict 경로에서 병합/충돌을 검토하세요.",
     restore_purge_epoch_regression_blocked:"현재 PURGE epoch보다 오래된 백업이라 삭제된 데이터를 되살릴 위험이 있어 복원을 차단했습니다.",
     backup_user_schema_unsupported:"현재 runtime이 이 USER schema를 자동 변환할 명시적 adapter를 갖고 있지 않아 복원을 차단했습니다.",
     backup_portable_state_unsupported:"현재 H-06에서 승인되지 않은 portable feature/lifecycle 상태가 포함되어 있어 자동 복원을 차단했습니다.",
@@ -614,6 +630,9 @@ async function initRecoveryUI(){
     const degraded=!!(verified&&!verified.ok)||(verified&&verified.snapshot&&!canonicalReady);
     elevate(degraded);
     const personaDep=runtimePersonaDependency();
+    if(global.InooLifecycle&&typeof global.InooLifecycle.readRow==="function"){
+      try{const lifecycleRow=await global.InooLifecycle.readRow(db);const lv=lifecycleRow&&lifecycleRow.value;if(createdEl)createdEl.textContent=lv&&lv.last_backup_generated_at||"없음";if(verifiedEl)verifiedEl.textContent=lv&&lv.last_backup_verified_at||"없음";}catch(_){}
+    }
     if(backupBtn)backupBtn.disabled=!canonicalReady||!personaDep;
     if(rawBtn)rawBtn.disabled=false;
     if(restoreFile)restoreFile.disabled=false;
@@ -643,7 +662,9 @@ async function initRecoveryUI(){
         personaDependency:runtimePersonaDependency(),runtimeConfig:runtimeConfig(),allowSensitive:!!(sensitive&&sensitive.checked)
       });
       downloadJson(bundle,`inoo_companion_standard_recovery_${fileStamp(bundle.created_at)}.json`);
+      if(global.InooLifecycle&&typeof global.InooLifecycle.noteBackupStatus==="function")await global.InooLifecycle.noteBackupStatus(db,{generatedAt:bundle.created_at,verifiedAt:bundle.verified_at});
       if(createdEl)createdEl.textContent=bundle.created_at;if(verifiedEl)verifiedEl.textContent=bundle.verified_at;
+      if(global.dispatchEvent)global.dispatchEvent(new CustomEvent("inoo:lifecycle-changed",{detail:{kind:"backup_verified"}}));
       setStatus("Standard Recovery Backup을 생성한 뒤 메모리 내 재검증까지 통과했습니다. 생성 시각과 검증 시각을 별도로 기록했습니다.","ready");
     }catch(e){setStatus(humanError(e&&e.code),"error");}
     finally{await refresh();}
@@ -706,7 +727,7 @@ const api=Object.freeze({
   ensureRecoveryFeature,personaDependencyEqual,snapshotBasis,resolveUserSchemaRestorePath,verifySnapshotRecord,collectRollbackWindow,
   verifyStandardBackupObject,createStandardBackup,parseStandardBackupFile,parseStandardBackupText,prepareRestorePreview,inspectRestoreFile,
   commitRestorePreview,discardRestorePreview,buildRawRecoveryExport,initRecoveryUI,
-  _test:Object.freeze({sensitiveMemoryCount,backupSensitiveCount,neverStoreString,secretKeyName,sanitizeRawValue,backupPayloadHash,readCurrentRestoreBase})
+  _test:Object.freeze({sensitiveMemoryCount,backupSensitiveCount,neverStoreString,secretKeyName,sanitizeRawValue,backupPayloadHash,readCurrentRestoreBase,assertPortableState,collectPortableState})
 });
 global.InooCanonicalRecovery=api;
 if(global.document){
