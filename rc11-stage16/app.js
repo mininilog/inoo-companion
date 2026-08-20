@@ -503,7 +503,7 @@ function networkStatus(){
 async function checkVersion(){
  try{
   const v=await getJSON("version.json");
-  if(v.app_version&&v.app_version!==L.VERSION){$("#updateBar").hidden=false;$("#updateText").textContent=tr("update_ready")}
+  if((v.app_version&&v.app_version!==L.VERSION)||(v.runtime_version&&v.runtime_version!==L.RUNTIME)){$("#updateBar").hidden=false;$("#updateText").textContent=tr("update_ready")}
  }catch(e){/* Version check is non-critical. */}
 }
 function wire(){

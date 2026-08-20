@@ -1,7 +1,7 @@
 {
   "schema_version": "0.9.0",
-  "app_version": "0.9.0",
-  "runtime_version": "1.4.0-rc10",
+  "app_version": "0.9.1",
+  "runtime_version": "1.5.0-rc11-h12.1",
   "chat_target": {
     "type": "generic_chatgpt",
     "url": "https://chatgpt.com/"
