@@ -144,6 +144,7 @@ html:not(.js-ready) .continuity-sensitive input{
 .session-state-value[data-state="ready"]{color:#315d42;font-weight:800}
 .session-state-value[data-state="error"]{color:#8b3f4c;font-weight:800}
 .session-private-row{align-items:flex-start}
+.session-private-row .session-state-value{flex:0 0 auto;min-width:2.5em;white-space:nowrap;overflow-wrap:normal}
 .session-private-toggle{flex:1 1 auto;min-width:0}
 .session-private-toggle .help{margin-top:2px}
 .voice-reservation{padding:0 12px}

@@ -1,7 +1,7 @@
 
 (function(global){
 "use strict";
-const VERSION="0.9.1",RUNTIME="1.5.0-rc11-h12.1",CURRENT_YEAR=2026;
+const VERSION="0.9.1",RUNTIME="1.5.0-rc11-h13.2",CURRENT_YEAR=2026;
 const DEFAULTS=Object.freeze({
  locale:"auto",era:"current",year_timeslip:"2017",scene:"daily",activity:"casual_talk",
  relationship:"familiar",state:"normal",language_support:"natural_mixed",proficiency:"adaptive",

@@ -1,6 +1,6 @@
 {
   "app_version": "0.9.1",
-  "runtime_version": "1.5.0-rc11-h12.1",
+  "runtime_version": "1.5.0-rc11-h13.2",
   "persona_public_bootstrap": "0.3",
   "released": "2026-08-20"
 }
