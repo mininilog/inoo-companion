@@ -169,3 +169,36 @@ html:not(.js-ready) .continuity-sensitive input{
  .capability-panel summary,.capability-line{align-items:flex-start;flex-direction:column}
  .capability-panel .session-state-value{text-align:left}
 }
+
+/* Stage 17 H-06 — canonical Backup / Recovery */
+.data-safety-card{padding:17px}
+.data-safety-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.data-safety-head h2{font-size:18px;margin:4px 0 0}
+.data-safety-badge{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;padding:6px 9px;font-size:11px;font-weight:850}
+.data-safety-status{margin:12px 0;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.78);font-size:12px;line-height:1.55;color:var(--muted)}
+.data-safety-status[data-state="ready"]{background:var(--ok);color:var(--ink)}
+.data-safety-status[data-state="warn"]{background:var(--warn);color:var(--ink)}
+.data-safety-status[data-state="error"]{background:var(--err);color:var(--ink)}
+.backup-time-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.backup-time-grid>div{padding:10px 11px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.78)}
+.backup-time-grid b,.backup-time-grid span{display:block;font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+.backup-time-grid span{margin-top:3px;color:var(--muted)}
+.recovery-sensitive-opt{display:flex;gap:9px;align-items:flex-start;margin:10px 0;padding:10px 11px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.78);font-size:12px}
+.recovery-sensitive-opt input{width:20px;height:20px;flex:0 0 auto}
+.recovery-sensitive-opt small{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.45;font-weight:500}
+.data-safety-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.recovery-file-action{min-height:48px;text-align:center;line-height:1.35}
+.recovery-preview{margin-top:10px}
+.recovery-tools{margin-top:12px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.72);padding:0 12px 12px}
+.recovery-tools summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;cursor:pointer}
+.recovery-tools summary span{font-size:11px;color:var(--muted);font-weight:600;text-align:right}
+.raw-recovery-button{margin-top:2px}
+.recovery-reserved{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:8px;padding:9px 10px;border:1px dashed var(--line);border-radius:12px;font-size:11px}
+.recovery-reserved b{font-size:11px}.recovery-reserved span{color:var(--muted);text-align:right;line-height:1.4}
+.data-safety-degraded .data-safety-card{outline:3px solid rgba(139,63,76,.18)}
+html:not(.js-ready) .data-safety button,html:not(.js-ready) .data-safety input{pointer-events:none;opacity:.62}
+@media(max-width:420px){
+ .data-safety-head,.recovery-tools summary,.recovery-reserved{align-items:flex-start;flex-direction:column}
+ .backup-time-grid,.data-safety-actions{grid-template-columns:1fr}
+ .recovery-tools summary span,.recovery-reserved span{text-align:left}
+}

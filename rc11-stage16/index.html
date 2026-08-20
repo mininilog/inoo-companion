@@ -158,6 +158,39 @@
   </div>
 </section>
 
+<section id="dataSafety" class="section data-safety" aria-labelledby="dataSafetyTitle">
+  <div class="card data-safety-card">
+    <div class="data-safety-head">
+      <div>
+        <div class="eyebrow">CANONICAL RECOVERY</div>
+        <h2 id="dataSafetyTitle">데이터 안전 · Backup / Recovery</h2>
+      </div>
+      <span class="data-safety-badge">H-06</span>
+    </div>
+    <p id="dataSafetyStatus" class="data-safety-status" role="status" aria-live="polite">canonical USER와 Persona dependency를 확인하고 있습니다.</p>
+    <div class="backup-time-grid" aria-label="Backup verification times">
+      <div><b>마지막 생성</b><span id="backupGeneratedAt">없음</span></div>
+      <div><b>마지막 검증</b><span id="backupVerifiedAt">없음</span></div>
+    </div>
+    <label class="recovery-sensitive-opt">
+      <input id="recoverySensitiveOptIn" type="checkbox">
+      <span><b>민감 기억 포함 허용</b><small>민감 기억이 있는 Standard Backup 생성·복원에만 사용합니다. NEVER STORE 항목은 허용하지 않습니다.</small></span>
+    </label>
+    <div class="data-safety-actions">
+      <button id="btnCanonicalBackup" class="memory-primary" type="button" disabled>Standard Recovery Backup 생성</button>
+      <label id="canonicalRestoreLabel" class="action recovery-file-action"><span>Standard Backup 선택 · Restore 검사</span><input id="canonicalRestoreFile" type="file" accept=".json,application/json" disabled></label>
+    </div>
+    <div id="canonicalRestorePreview" class="memory-review recovery-preview" hidden></div>
+    <button id="btnCanonicalRestoreApply" class="memory-primary" type="button" hidden>확인하고 새 revision으로 Restore</button>
+    <details id="recoveryTools" class="recovery-tools">
+      <summary><b>복구 도구</b><span>Raw Recovery · 후속 보호 기능</span></summary>
+      <button id="btnRawRecovery" class="memory-secondary raw-recovery-button" type="button" disabled>Raw Recovery Export</button>
+      <div class="recovery-reserved"><b>Forward Rollback / PURGE</b><span>H-07 예약 · 아직 실행 기능 없음</span></div>
+      <div class="recovery-reserved"><b>Transfer / Conflict</b><span>H-08 예약 · 다른 lineage 자동 덮어쓰기 없음</span></div>
+    </details>
+  </div>
+</section>
+
 <section class="section"><details class="card"><summary id="advancedSummary">세부 설정</summary><div class="fields">
 <div class="field"><label data-field-label="era" for="era">Era</label><select id="era" data-key="era"><option value="current"></option><option value="20s_early"></option><option value="20s_late"></option><option value="30s_early"></option><option value="year_timeslip"></option></select></div>
 <div class="field" id="yearRow" hidden><label data-field-label="year_timeslip" for="year_timeslip">Year</label><input id="year_timeslip" type="number" min="2009" max="2026" inputmode="numeric"></div>
@@ -179,9 +212,9 @@
 <div id="nextStep" hidden><a id="openChatgpt" class="openBtn" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer"><span id="openText">ChatGPT 열기</span><small id="openSub">열리면 입력창에 붙여넣기</small></a></div>
 <div id="status" class="status" role="status" aria-live="polite">미리보기에서는 기능이 비활성화되어 있습니다. 실제 사용은 HTTPS 공유 링크에서 해주세요.</div>
 <div id="fallbackWrap" class="fallback" hidden><textarea id="fallbackPrompt" readonly aria-label="Session setup text"></textarea><button id="manualCopy">텍스트 선택해서 복사하기</button></div>
-<div class="utility"><button id="btnPrevious">직전 설정 복원</button><button id="btnBackup">내 설정 백업</button><label id="restoreLabel" class="action"><span id="restoreLabelText">설정 복원</span><input id="restoreFile" type="file" accept=".json,application/json"></label><button id="btnReset">기본값</button></div>
+<div class="utility"><button id="btnPrevious">직전 설정 복원</button><button id="btnBackup">컨트롤러 설정 내보내기</button><label id="restoreLabel" class="action"><span id="restoreLabelText">컨트롤러 설정 가져오기</span><input id="restoreFile" type="file" accept=".json,application/json"></label><button id="btnReset">기본값</button></div>
 <div class="fine"><div id="loginNote">ChatGPT에서 대화하려면 로그인이 필요할 수 있습니다.</div><div id="installNote">홈 화면 추가는 선택사항입니다. 설치하지 않아도 사용할 수 있어요.</div><div id="notice">비공식 · 공개 자료 기반 팬 컴패니언</div></div>
 </section>
 </main>
-<script src="logic.js"></script><script src="storage.js"></script><script src="integrity_foundation.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="controller_ui.js"></script>
+<script src="logic.js"></script><script src="storage.js"></script><script src="integrity_foundation.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="recovery.js"></script><script src="controller_ui.js"></script>
 </body></html>
