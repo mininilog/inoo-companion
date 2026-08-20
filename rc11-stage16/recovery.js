@@ -89,19 +89,20 @@ function snapshotBasis(snapshot){
     operation_id:snapshot.operation_id,
     operation_type:snapshot.operation_type,
     purge_epoch:snapshot.purge_epoch,
-    created_at:snapshot.created_at
+    created_at:snapshot.created_at,
+    ...(snapshot.operation_metadata!==undefined?{operation_metadata:snapshot.operation_metadata}:{})
   };
 }
 function assertSnapshotShape(snapshot){
   exactKeys(snapshot,new Set([
     "snapshot_id","lineage_id","replica_id","parent_snapshot_id","revision","user_schema_version","user_payload_hash",
-    "operation_id","operation_type","purge_epoch","created_at","snapshot_hash","payload"
+    "operation_id","operation_type","purge_epoch","created_at","operation_metadata","snapshot_hash","payload"
   ]),"backup_snapshot_shape_invalid");
   if(!nonEmptyString(snapshot.snapshot_id)||!nonEmptyString(snapshot.lineage_id)||!nonEmptyString(snapshot.replica_id)||
     (snapshot.parent_snapshot_id!==null&&!nonEmptyString(snapshot.parent_snapshot_id))||!Number.isInteger(snapshot.revision)||snapshot.revision<1||
     !nonEmptyString(snapshot.user_schema_version)||!/^[0-9a-f]{64}$/.test(snapshot.user_payload_hash||"")||!nonEmptyString(snapshot.operation_id)||
     !nonEmptyString(snapshot.operation_type)||!Number.isInteger(snapshot.purge_epoch)||snapshot.purge_epoch<0||!validIso(snapshot.created_at)||
-    !/^[0-9a-f]{64}$/.test(snapshot.snapshot_hash||""))throw recoveryError("backup_snapshot_shape_invalid");
+    !/^[0-9a-f]{64}$/.test(snapshot.snapshot_hash||"")||(snapshot.operation_metadata!==undefined&&!isObject(snapshot.operation_metadata)))throw recoveryError("backup_snapshot_shape_invalid");
   return snapshot;
 }
 function assertHeadShape(head){
@@ -629,7 +630,10 @@ async function initRecoveryUI(){
     return null;
   }
 
-  if(global.addEventListener)global.addEventListener("inoo:foundation-ready",()=>refresh().catch(()=>{}),{once:true});
+  if(global.addEventListener){
+    global.addEventListener("inoo:foundation-ready",()=>refresh().catch(()=>{}),{once:true});
+    global.addEventListener("inoo:canonical-history-committed",()=>{pendingRestore=null;if(restoreApply)restoreApply.hidden=true;if(restorePreview){restorePreview.hidden=true;restorePreview.textContent="";}refresh().catch(()=>{});});
+  }
 
   if(backupBtn)backupBtn.addEventListener("click",async()=>{
     backupBtn.disabled=true;

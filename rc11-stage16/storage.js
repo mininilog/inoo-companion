@@ -5,6 +5,7 @@ const DB_NAME="inoo_companion_user_db";
 const DB_LAYOUT_VERSION=1;
 const HEAD_KEY="canonical";
 const LOCK_NAME="inoo_companion_user_commit";
+const PURGE_ROOT_OPERATION_TYPE="canonical_purge";
 const STORES=Object.freeze({
   META:"meta",
   SNAPSHOTS:"snapshots",
@@ -209,9 +210,13 @@ function assertCommitInput(input){
   if((input.expectedHeadSnapshotId!==null&&typeof input.expectedHeadSnapshotId!=="string")||(input.expectedHeadHash!==null&&typeof input.expectedHeadHash!=="string"))throw storageError("commit_expected_head_invalid");
   if(!Number.isInteger(input.purgeEpoch)||input.purgeEpoch<0)throw storageError("commit_purge_epoch_invalid");
   canonicalJSONStringify(input.payload);
+  if(input.operationMetadata!==undefined){
+    if(!input.operationMetadata||typeof input.operationMetadata!=="object"||Array.isArray(input.operationMetadata))throw storageError("commit_operation_metadata_invalid");
+    canonicalJSONStringify(input.operationMetadata);
+  }
 }
 
-async function prepareSnapshot(input,identity,currentHead){
+async function prepareSnapshot(input,identity,currentHead,{forceRootParent=false}={}){
   const snapshotId=newSnapshotId();
   const createdAt=new Date().toISOString();
   const revision=currentHead?currentHead.revision+1:1;
@@ -220,24 +225,26 @@ async function prepareSnapshot(input,identity,currentHead){
     snapshot_id:snapshotId,
     lineage_id:identity.lineage_id,
     replica_id:identity.replica_id,
-    parent_snapshot_id:currentHead?currentHead.snapshot_id:null,
+    parent_snapshot_id:forceRootParent?null:(currentHead?currentHead.snapshot_id:null),
     revision,
     user_schema_version:input.userSchemaVersion,
     user_payload_hash:userPayloadHash,
     operation_id:input.operationId,
     operation_type:input.operationType,
     purge_epoch:input.purgeEpoch,
-    created_at:createdAt
+    created_at:createdAt,
+    ...(input.operationMetadata!==undefined?{operation_metadata:input.operationMetadata}:{})
   };
   const snapshotHash=await sha256Hex(basis);
   return {...basis,snapshot_hash:snapshotHash,payload:input.payload};
 }
 
-async function commitSnapshotUnlocked(db,input){
+async function commitSnapshotUnlocked(db,input,{forceRootParent=false,requirePurgeRoot=false}={}){
   assertCommitInput(input);
   const identity=await ensureIdentity(db,{lineageId:input.lineageId||null});
   const preHead=await readHead(db);
-  const prepared=await prepareSnapshot(input,identity,preHead);
+  if(requirePurgeRoot&&input.operationType!==PURGE_ROOT_OPERATION_TYPE)throw storageError("purge_root_operation_type_invalid");
+  const prepared=await prepareSnapshot(input,identity,preHead,{forceRootParent});
 
   const tx=openWriteTransaction(db,[STORES.RECEIPTS,STORES.HEADS,STORES.SNAPSHOTS]);
   const receipts=tx.objectStore(STORES.RECEIPTS),heads=tx.objectStore(STORES.HEADS),snapshots=tx.objectStore(STORES.SNAPSHOTS);
@@ -256,6 +263,13 @@ async function commitSnapshotUnlocked(db,input){
     tx.abort();
     try{await transactionDone(tx)}catch(e){}
     throw storageError("stale_candidate",{expected_snapshot_id:expectedId,actual_snapshot_id:actualHeadId});
+  }
+  if(requirePurgeRoot){
+    if(!actualHead||input.purgeEpoch!==actualHead.purge_epoch+1){
+      tx.abort();
+      try{await transactionDone(tx)}catch(e){}
+      throw storageError("purge_epoch_increment_required",{current:actualHead?actualHead.purge_epoch:null,requested:input.purgeEpoch});
+    }
   }
 
   // Rebuild if the pre-read HEAD changed before this transaction acquired its snapshot.
@@ -285,7 +299,8 @@ async function commitSnapshotUnlocked(db,input){
     snapshot_id:snapshot.snapshot_id,
     snapshot_hash:snapshot.snapshot_hash,
     parent_snapshot_id:snapshot.parent_snapshot_id,
-    committed_at:snapshot.created_at
+    committed_at:snapshot.created_at,
+    ...(snapshot.operation_metadata!==undefined?{operation_metadata:snapshot.operation_metadata}:{})
   };
   receipts.add(receipt);
   await transactionDone(tx);
@@ -300,6 +315,7 @@ async function withCommitLock(fn){
 }
 
 async function commitSnapshot(db,input){return withCommitLock(()=>commitSnapshotUnlocked(db,input))}
+async function commitNewRoot(db,input){return withCommitLock(()=>commitSnapshotUnlocked(db,input,{forceRootParent:true,requirePurgeRoot:true}))}
 
 async function verifyHead(db){
   const head=await readHead(db);
@@ -313,7 +329,8 @@ async function verifyHead(db){
     snapshot_id:snapshot.snapshot_id,lineage_id:snapshot.lineage_id,replica_id:snapshot.replica_id,
     parent_snapshot_id:snapshot.parent_snapshot_id,revision:snapshot.revision,user_schema_version:snapshot.user_schema_version,
     user_payload_hash:snapshot.user_payload_hash,operation_id:snapshot.operation_id,operation_type:snapshot.operation_type,
-    purge_epoch:snapshot.purge_epoch,created_at:snapshot.created_at
+    purge_epoch:snapshot.purge_epoch,created_at:snapshot.created_at,
+    ...(snapshot.operation_metadata!==undefined?{operation_metadata:snapshot.operation_metadata}:{})
   };
   const snapshotHash=await sha256Hex(basis);
   if(snapshotHash!==snapshot.snapshot_hash)return {ok:false,code:"snapshot_hash_mismatch",head,snapshot};
@@ -323,9 +340,9 @@ async function verifyHead(db){
 function closeDatabase(db){if(db)db.close()}
 
 const api=Object.freeze({
-  DB_NAME,DB_LAYOUT_VERSION,STORES,HEAD_KEY,
+  DB_NAME,DB_LAYOUT_VERSION,STORES,HEAD_KEY,PURGE_ROOT_OPERATION_TYPE,
   openDatabase,closeDatabase,getIdentity,ensureIdentity,readMeta,readHead,readSnapshot,inspectOperation,
-  newOperationId,commitSnapshot,verifyHead,canonicalJSONStringify,sha256Hex,
+  newOperationId,commitSnapshot,commitNewRoot,verifyHead,canonicalJSONStringify,sha256Hex,
   _test:{validUnicodeString}
 });
 

@@ -240,10 +240,16 @@ async function initControllerUI(){
     if(transportText){transportText.hidden=true;transportText.value="";}
   }
 
-  if(global.addEventListener)global.addEventListener("inoo:canonical-recovery-committed",()=>{
-    clearConversationState();
-    refresh().catch(()=>{});
-  });
+  if(global.addEventListener){
+    global.addEventListener("inoo:canonical-recovery-committed",()=>{
+      clearConversationState();
+      refresh().catch(()=>{});
+    });
+    global.addEventListener("inoo:canonical-history-committed",()=>{
+      clearConversationState();
+      refresh().catch(()=>{});
+    });
+  }
 
   async function refresh(){
     info=await detectControllerState(db);

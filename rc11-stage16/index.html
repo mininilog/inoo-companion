@@ -185,7 +185,24 @@
     <details id="recoveryTools" class="recovery-tools">
       <summary><b>복구 도구</b><span>Raw Recovery · 후속 보호 기능</span></summary>
       <button id="btnRawRecovery" class="memory-secondary raw-recovery-button" type="button" disabled>Raw Recovery Export</button>
-      <div class="recovery-reserved"><b>Forward Rollback / PURGE</b><span>H-07 예약 · 아직 실행 기능 없음</span></div>
+      <div id="historySafety" class="history-safety" aria-labelledby="historySafetyTitle">
+        <div class="history-safety-head"><b id="historySafetyTitle">Forward Rollback / PURGE</b><span>H-07 · forward-only lineage protection</span></div>
+        <p id="historySafetyStatus" class="history-safety-status" role="status" aria-live="polite">Rollback history와 purge_epoch를 확인하고 있습니다.</p>
+        <div class="history-control-block">
+          <label for="rollbackTarget"><b>Forward Rollback</b><small>동일 lineage · 동일 purge_epoch의 최근 bounded ancestor만 선택할 수 있습니다.</small></label>
+          <select id="rollbackTarget" disabled><option value="">Rollback 후보 확인 중</option></select>
+          <button id="btnRollbackInspect" class="memory-secondary" type="button" disabled>Rollback Preview</button>
+          <div id="rollbackPreview" class="memory-review recovery-preview" hidden></div>
+          <button id="btnRollbackApply" class="memory-primary" type="button" hidden>확인하고 새 revision으로 Rollback</button>
+        </div>
+        <div class="history-control-block purge-control-block">
+          <div><b>PURGE</b><small>canonical USER를 비운 sanitized NEW ROOT를 만들고 purge_epoch를 증가시킵니다. 기존 HEAD를 뒤로 이동하거나 과거 snapshot을 삭제하지 않습니다.</small></div>
+          <label class="purge-ack"><input id="purgeOldBackupAck" type="checkbox"><span>이미 내려받은 옛 백업·오프라인 replica는 서버리스 구조에서 원격 폐기할 수 없음을 확인했습니다.</span></label>
+          <button id="btnPurgeInspect" class="memory-secondary purge-preview-button" type="button" disabled>PURGE Preview</button>
+          <div id="purgePreview" class="memory-review recovery-preview" hidden></div>
+          <button id="btnPurgeApply" class="purge-danger" type="button" hidden>확인하고 sanitized NEW ROOT 생성</button>
+        </div>
+      </div>
       <div class="recovery-reserved"><b>Transfer / Conflict</b><span>H-08 예약 · 다른 lineage 자동 덮어쓰기 없음</span></div>
     </details>
   </div>
@@ -216,5 +233,5 @@
 <div class="fine"><div id="loginNote">ChatGPT에서 대화하려면 로그인이 필요할 수 있습니다.</div><div id="installNote">홈 화면 추가는 선택사항입니다. 설치하지 않아도 사용할 수 있어요.</div><div id="notice">비공식 · 공개 자료 기반 팬 컴패니언</div></div>
 </section>
 </main>
-<script src="logic.js"></script><script src="storage.js"></script><script src="integrity_foundation.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="recovery.js"></script><script src="controller_ui.js"></script>
+<script src="logic.js"></script><script src="storage.js"></script><script src="integrity_foundation.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="recovery.js"></script><script src="history.js"></script><script src="controller_ui.js"></script>
 </body></html>
