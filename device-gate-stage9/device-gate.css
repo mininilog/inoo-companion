@@ -1,0 +1,15 @@
+*{box-sizing:border-box}
+:root{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Noto Sans JP",system-ui,sans-serif;color:#1f2a33;background:#eef9ff}
+body{margin:0;min-height:100vh;background:linear-gradient(155deg,#e7f8ff,#f8fcff 48%,#fff0f6)}
+.wrap{max-width:680px;margin:auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(48px + env(safe-area-inset-bottom))}
+.card{background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.95);border-radius:26px;padding:20px;box-shadow:0 16px 44px rgba(65,101,125,.12)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;color:#637b89}
+h1{font-size:clamp(25px,7vw,34px);line-height:1.15;margin:6px 0 9px;letter-spacing:-.04em}
+.sub,.fine{color:#536674;line-height:1.55}.sub{font-size:14px}.fine{font-size:12px;margin:14px 2px 0}
+.status{margin:14px 0 10px;min-height:48px;padding:12px 14px;border-radius:15px;background:#eef9ff;border:1px solid #c9e8f6;font-size:14px;line-height:1.45}
+button{width:100%;min-height:52px;border-radius:16px;font:inherit;font-weight:850;padding:10px 14px;margin-top:8px}
+.primary{border:0;background:linear-gradient(135deg,#aee6ff,#ffcbe0);color:#20313b}
+.secondary{border:1px solid #c9dce6;background:#fff;color:#1f2a33}
+button:focus-visible{outline:3px solid #164e70;outline-offset:3px}
+.result{margin:12px 0 0;padding:12px;border:1px solid #c9dce6;border-radius:14px;background:#fff;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:48vh;overflow:auto}
+[hidden]{display:none!important}
