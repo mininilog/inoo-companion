@@ -221,3 +221,13 @@ html:not(.js-ready) .data-safety button,html:not(.js-ready) .data-safety input{p
 .purge-danger{min-height:46px;border:1px solid rgba(139,63,76,.38);border-radius:12px;background:var(--err);color:var(--ink);font:inherit;font-size:12px;font-weight:850;cursor:pointer}
 .purge-danger:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:420px){.history-safety-head{flex-direction:column}.history-safety-head span{text-align:left}}
+
+/* H-08 Cross-Replica Transfer / Conflict */
+.replica-transfer{margin-top:14px;padding:14px;border:1px solid var(--line,#d7e6ef);border-radius:16px;background:rgba(255,255,255,.62)}
+.replica-transfer-head{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}.replica-transfer-head span{font-size:.78rem;opacity:.7}
+.replica-transfer-status,.replica-identity-status{margin:8px 0 0;white-space:pre-wrap}.replica-transfer-status[data-state="error"]{font-weight:700}.replica-transfer-status[data-state="warn"]{font-weight:650}
+.replica-identity-status{font-size:.82rem;opacity:.82}.replica-transfer-note{margin:10px 0;padding:10px;border-radius:12px;background:rgba(80,140,170,.08);font-size:.82rem;line-height:1.45}
+.replica-transfer-file{margin-top:10px}.replica-transfer-preview{margin-top:10px}.replica-conflict-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.replica-incoming-danger{width:100%;border:1px solid currentColor;border-radius:12px;padding:11px 12px;background:transparent;font:inherit;font-weight:700;cursor:pointer}
+.replica-transfer-foot{display:block;margin-top:10px;line-height:1.45;opacity:.75}
+@media (max-width:520px){.replica-conflict-actions{grid-template-columns:1fr}.replica-transfer-head{display:block}.replica-transfer-head span{display:block;margin-top:3px}}

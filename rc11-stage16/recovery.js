@@ -633,6 +633,7 @@ async function initRecoveryUI(){
   if(global.addEventListener){
     global.addEventListener("inoo:foundation-ready",()=>refresh().catch(()=>{}),{once:true});
     global.addEventListener("inoo:canonical-history-committed",()=>{pendingRestore=null;if(restoreApply)restoreApply.hidden=true;if(restorePreview){restorePreview.hidden=true;restorePreview.textContent="";}refresh().catch(()=>{});});
+    global.addEventListener("inoo:canonical-transfer-committed",()=>{pendingRestore=null;if(restoreApply)restoreApply.hidden=true;if(restorePreview){restorePreview.hidden=true;restorePreview.textContent="";}refresh().catch(()=>{});});
   }
 
   if(backupBtn)backupBtn.addEventListener("click",async()=>{

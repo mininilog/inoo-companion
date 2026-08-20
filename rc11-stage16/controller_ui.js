@@ -249,6 +249,10 @@ async function initControllerUI(){
       clearConversationState();
       refresh().catch(()=>{});
     });
+    global.addEventListener("inoo:canonical-transfer-committed",()=>{
+      clearConversationState();
+      refresh().catch(()=>{});
+    });
   }
 
   async function refresh(){

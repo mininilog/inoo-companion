@@ -6,6 +6,7 @@ const DB_LAYOUT_VERSION=1;
 const HEAD_KEY="canonical";
 const LOCK_NAME="inoo_companion_user_commit";
 const PURGE_ROOT_OPERATION_TYPE="canonical_purge";
+const TRANSFER_ROOT_OPERATION_TYPE="canonical_replica_purge_adopt";
 const STORES=Object.freeze({
   META:"meta",
   SNAPSHOTS:"snapshots",
@@ -239,11 +240,12 @@ async function prepareSnapshot(input,identity,currentHead,{forceRootParent=false
   return {...basis,snapshot_hash:snapshotHash,payload:input.payload};
 }
 
-async function commitSnapshotUnlocked(db,input,{forceRootParent=false,requirePurgeRoot=false}={}){
+async function commitSnapshotUnlocked(db,input,{forceRootParent=false,requirePurgeRoot=false,requireTransferRoot=false}={}){
   assertCommitInput(input);
   const identity=await ensureIdentity(db,{lineageId:input.lineageId||null});
   const preHead=await readHead(db);
   if(requirePurgeRoot&&input.operationType!==PURGE_ROOT_OPERATION_TYPE)throw storageError("purge_root_operation_type_invalid");
+  if(requireTransferRoot&&input.operationType!==TRANSFER_ROOT_OPERATION_TYPE)throw storageError("transfer_root_operation_type_invalid");
   const prepared=await prepareSnapshot(input,identity,preHead,{forceRootParent});
 
   const tx=openWriteTransaction(db,[STORES.RECEIPTS,STORES.HEADS,STORES.SNAPSHOTS]);
@@ -269,6 +271,13 @@ async function commitSnapshotUnlocked(db,input,{forceRootParent=false,requirePur
       tx.abort();
       try{await transactionDone(tx)}catch(e){}
       throw storageError("purge_epoch_increment_required",{current:actualHead?actualHead.purge_epoch:null,requested:input.purgeEpoch});
+    }
+  }
+  if(requireTransferRoot){
+    if(!actualHead||input.purgeEpoch<=actualHead.purge_epoch){
+      tx.abort();
+      try{await transactionDone(tx)}catch(e){}
+      throw storageError("transfer_root_higher_purge_epoch_required",{current:actualHead?actualHead.purge_epoch:null,requested:input.purgeEpoch});
     }
   }
 
@@ -316,6 +325,7 @@ async function withCommitLock(fn){
 
 async function commitSnapshot(db,input){return withCommitLock(()=>commitSnapshotUnlocked(db,input))}
 async function commitNewRoot(db,input){return withCommitLock(()=>commitSnapshotUnlocked(db,input,{forceRootParent:true,requirePurgeRoot:true}))}
+async function commitTransferRoot(db,input){return withCommitLock(()=>commitSnapshotUnlocked(db,input,{forceRootParent:true,requireTransferRoot:true}))}
 
 async function verifyHead(db){
   const head=await readHead(db);
@@ -342,7 +352,7 @@ function closeDatabase(db){if(db)db.close()}
 const api=Object.freeze({
   DB_NAME,DB_LAYOUT_VERSION,STORES,HEAD_KEY,PURGE_ROOT_OPERATION_TYPE,
   openDatabase,closeDatabase,getIdentity,ensureIdentity,readMeta,readHead,readSnapshot,inspectOperation,
-  newOperationId,commitSnapshot,commitNewRoot,verifyHead,canonicalJSONStringify,sha256Hex,
+  newOperationId,commitSnapshot,commitNewRoot,commitTransferRoot,verifyHead,canonicalJSONStringify,sha256Hex,
   _test:{validUnicodeString}
 });
 

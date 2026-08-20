@@ -31,7 +31,7 @@ function compareHead(a,b){
   return a.snapshot_id===b.snapshot_id&&a.snapshot_hash===b.snapshot_hash&&a.revision===b.revision&&a.purge_epoch===b.purge_epoch&&a.lineage_id===b.lineage_id;
 }
 function operationPriority(operationType){
-  if(operationType===PURGE_OPERATION_TYPE)return OPERATION_PRIORITY.PURGE;
+  if(operationType===PURGE_OPERATION_TYPE||operationType==="canonical_replica_purge_adopt")return OPERATION_PRIORITY.PURGE;
   if(MERGE_OPERATION_TYPES.has(operationType))return OPERATION_PRIORITY.MERGE;
   return OPERATION_PRIORITY.NORMAL;
 }
@@ -406,6 +406,7 @@ async function initHistoryUI(){
   });
   if(global.addEventListener){
     global.addEventListener("inoo:canonical-recovery-committed",()=>refresh().catch(()=>{}));
+    global.addEventListener("inoo:canonical-transfer-committed",()=>refresh().catch(()=>{}));
     global.addEventListener("inoo:foundation-ready",()=>refresh().catch(()=>{}),{once:true});
   }
   return {db,refresh,getPendingRollback:()=>pendingRollback,getPendingPurge:()=>pendingPurge};
