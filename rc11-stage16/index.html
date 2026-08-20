@@ -229,14 +229,19 @@
           <button id="btnPurgeApply" class="purge-danger" type="button" hidden>확인하고 sanitized NEW ROOT 생성</button>
         </div>
       </div>
-      <div id="transferSafety" class="transfer-safety" aria-labelledby="transferSafetyTitle">
-        <div class="transfer-safety-head"><b id="transferSafetyTitle">Transfer / Conflict</b><span>H-08 · manual portable replica transfer</span></div>
-        <p id="transferSafetyStatus" class="transfer-safety-status" role="status" aria-live="polite">replica/lineage 관계를 확인하고 있습니다.</p>
-        <label class="action recovery-file-action transfer-file-action"><span>Standard Backup 선택 · Transfer 검사</span><input id="replicaTransferFile" type="file" accept=".json,application/json" disabled></label>
-        <div id="transferPreview" class="memory-review recovery-preview" hidden></div>
-        <div id="transferConflicts" class="transfer-conflicts" hidden></div>
-        <button id="btnTransferApply" class="memory-primary" type="button" hidden>확인하고 새 revision으로 Transfer / Merge</button>
-        <small class="transfer-no-sync">수동 파일 전송만 지원합니다. revision 숫자만으로 덮어쓰지 않으며 실시간 동기화를 주장하지 않습니다.</small>
+      <div id="replicaTransfer" class="replica-transfer" aria-labelledby="replicaTransferTitle">
+        <div class="replica-transfer-head"><b id="replicaTransferTitle">Replica Transfer / Conflict</b><span>H-08 · manual portable transfer · no real-time sync</span></div>
+        <p id="replicaTransferStatus" class="replica-transfer-status" role="status" aria-live="polite">Standard Backup을 이용한 manual transfer를 준비하고 있습니다.</p>
+        <p id="replicaIdentityStatus" class="replica-identity-status">현재 storage container replica를 확인하고 있습니다.</p>
+        <p class="replica-transfer-note"><b>replica_id는 물리 기기 ID가 아닙니다.</b> Safari·홈 화면 PWA·Android 브라우저/설치형 Web App이 같은 저장 컨테이너를 공유할 수도, 분리될 수도 있으므로 자동 추정하지 않습니다.</p>
+        <label class="action recovery-file-action replica-transfer-file"><span>Standard Backup 선택 · Transfer / Conflict 검사</span><input id="replicaTransferFile" type="file" accept=".json,application/json"></label>
+        <div id="replicaTransferPreview" class="memory-review recovery-preview replica-transfer-preview" hidden></div>
+        <button id="btnReplicaTransferApply" class="memory-primary" type="button" hidden>검증된 Transfer / Merge 적용</button>
+        <div class="replica-conflict-actions">
+          <button id="btnReplicaKeepLocal" class="memory-secondary" type="button" hidden>local 유지 · 저장 안 함</button>
+          <button id="btnReplicaUseIncoming" class="replica-incoming-danger" type="button" hidden>incoming 선택 · 새 revision 생성</button>
+        </div>
+        <small class="replica-transfer-foot">revision 숫자가 더 크다는 이유만으로 덮어쓰지 않습니다. deterministic safe case만 자동 merge 후보가 되며 충돌은 사용자가 확인합니다.</small>
       </div>
     </details>
   </div>
