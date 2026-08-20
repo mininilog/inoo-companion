@@ -6,7 +6,7 @@ const MAX_SETTINGS_FILE_BYTES=256*1024,MAX_CONTINUITY_INPUT_BYTES=32*1024,FETCH_
 const LEGACY_SW_CACHE="inoo-companion-v0.9.0";
 const ALLOWED_CHAT_ORIGINS=new Set(["https://chatgpt.com"]);
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
-let T={},bootstrap="",config={},state=load(),favorites=loadFavorites(),previous=loadPrevious(),continuity=loadContinuity(),continuityHistory=loadContinuityHistory(),continuitySensitive=loadContinuitySensitive(),pendingContinuity=null,continuityClearArmed=false,continuityClearTimer=null;
+let T={},bootstrap="",config={},personaState=null,capabilityProfile=null,state=load(),favorites=loadFavorites(),previous=loadPrevious(),continuity=loadContinuity(),continuityHistory=loadContinuityHistory(),continuitySensitive=loadContinuitySensitive(),pendingContinuity=null,continuityClearArmed=false,continuityClearTimer=null;
 
 
 async function decommissionLegacyOfflineRuntime(){
@@ -58,9 +58,49 @@ async function fetchWithTimeout(url,options={},retries=FETCH_RETRIES){
  throw lastError||new Error("network_error");
 }
 async function getJSON(url){return (await fetchWithTimeout(url,{cache:"no-store"})).json();}
-async function getText(url){return (await fetchWithTimeout(url,{cache:"no-store"})).text();}
+async function getBytes(url){return new Uint8Array(await (await fetchWithTimeout(url,{cache:"no-store"})).arrayBuffer());}
 async function initData(){
- [T,bootstrap,config]=await Promise.all([getJSON("i18n.json"),getText("public_bootstrap.txt"),getJSON("config.json")]);
+ const foundation=window.InooIntegrityFoundation;
+ if(!foundation)throw new Error("integrity_foundation_unavailable");
+ [T,config]=await Promise.all([getJSON("i18n.json"),getJSON("config.json")]);
+ try{capabilityProfile=foundation.createCapabilityProfile(config.capability_defaults||{});}
+ catch(_){capabilityProfile=foundation.createCapabilityProfile({});}
+ const descriptor=config.persona_package;
+ try{
+  const personaBytes=await getBytes(descriptor&&descriptor.resource||"public_bootstrap.txt");
+  personaState=await foundation.verifyPersonaBytes(personaBytes,descriptor);
+  if(personaState.status===foundation.PERSONA_STATUS.READY)bootstrap=foundation.decodePersonaBytes(personaBytes);
+  else bootstrap="";
+ }catch(e){
+  personaState=foundation.personaUnavailable(descriptor,e&&e.code||e&&e.message||"persona_load_failed");
+  bootstrap="";
+ }
+}
+function personaReady(){
+ const f=window.InooIntegrityFoundation;
+ return !!(f&&personaState&&personaState.status===f.PERSONA_STATUS.READY);
+}
+function personaStatusText(){
+ const f=window.InooIntegrityFoundation;
+ if(personaReady())return fmt(tr("persona_ready"),{version:personaState.descriptor.persona_package_version});
+ if(f&&personaState&&personaState.status===f.PERSONA_STATUS.INTEGRITY_FAILED)return tr("persona_integrity_failed");
+ return tr("persona_unavailable_user_preserved");
+}
+function capabilityStatusKey(status){
+ const f=window.InooIntegrityFoundation;
+ if(!f)return "capability_unknown";
+ if(status===f.CAPABILITY_STATUS.AVAILABLE)return "capability_available";
+ if(status===f.CAPABILITY_STATUS.UNAVAILABLE)return "capability_unavailable";
+ if(status===f.CAPABILITY_STATUS.USER_DISABLED)return "capability_user_disabled";
+ return "capability_unknown";
+}
+function capabilityStatusText(){
+ const f=window.InooIntegrityFoundation;
+ if(!f||!capabilityProfile)return tr("chat_baseline");
+ const project=f.capabilityDecision(capabilityProfile,"project_assistance");
+ const memory=f.capabilityDecision(capabilityProfile,"memory_assistance");
+ const optionalReady=[project,memory].some(x=>x.optional_available===true);
+ return optionalReady?tr("chat_optional_available"):tr("chat_baseline");
 }
 function safeChatTarget(raw){
  try{
@@ -149,6 +189,36 @@ function setStatus(msg,type="info"){
  e.textContent=msg;e.dataset.type=type;e.hidden=false;
 }
 function modeLabel(id){return ((T[locale()]||T.en).modes||{})[id]||id}
+function renderFoundationStatus(){
+ const f=window.InooIntegrityFoundation;
+ const sessionTitle=$("#sessionStatusTitle");if(sessionTitle)sessionTitle.textContent=tr("session_status_title");
+ const personaLabel=$("#personaStatusLabel");if(personaLabel)personaLabel.textContent=tr("persona_status_label");
+ const chatLabel=$("#chatCapabilityLabel");if(chatLabel)chatLabel.textContent=tr("chat_capability_label");
+ const manualLabel=$("#manualCapabilityLabel");if(manualLabel)manualLabel.textContent=tr("manual_capability_label");
+ const projectLabel=$("#projectCapabilityLabel");if(projectLabel)projectLabel.textContent=tr("project_capability_label");
+ const memoryLabel=$("#memoryCapabilityLabel");if(memoryLabel)memoryLabel.textContent=tr("memory_capability_label");
+ const voiceTitle=$("#voiceReactionTitle");if(voiceTitle)voiceTitle.textContent=tr("voice_reaction_title");
+ const voiceStatus=$("#voiceReactionStatus");if(voiceStatus)voiceStatus.textContent=tr("voice_reaction_unavailable");
+ const voiceTtsTitle=$("#voiceTtsTitle");if(voiceTtsTitle)voiceTtsTitle.textContent=tr("voice_tts_title");
+ const voiceTtsHelp=$("#voiceTtsHelp");if(voiceTtsHelp)voiceTtsHelp.textContent=tr("voice_tts_help");
+ const reactionTitle=$("#reactionEngineTitle");if(reactionTitle)reactionTitle.textContent=tr("reaction_engine_title");
+ const reactionHelp=$("#reactionEngineHelp");if(reactionHelp)reactionHelp.textContent=tr("reaction_engine_help");
+ const sttTitle=$("#sttTitle");if(sttTitle)sttTitle.textContent=tr("stt_title");
+ const sttHelp=$("#sttHelp");if(sttHelp)sttHelp.textContent=tr("stt_help");
+ const personaEl=$("#personaIntegrityStatus");if(personaEl){personaEl.textContent=personaStatusText();personaEl.dataset.state=personaReady()?"ready":"error";}
+ const capabilityEl=$("#chatCapabilityStatus");if(capabilityEl){capabilityEl.textContent=capabilityStatusText();capabilityEl.dataset.state="ready";}
+ const manualStatus=$("#manualCapabilityStatus");if(manualStatus){manualStatus.textContent=tr("capability_available");manualStatus.dataset.state="ready";}
+ if(f&&capabilityProfile){
+  for(const [capability,id] of [["project_assistance","projectCapabilityStatus"],["memory_assistance","memoryCapabilityStatus"]]){
+   const el=$("#"+id);if(!el)continue;
+   const decision=f.capabilityDecision(capabilityProfile,capability);
+   el.textContent=tr(capabilityStatusKey(decision.status))+(decision.fallback_to_baseline?" · "+tr("capability_baseline_fallback"):"");
+   el.dataset.state=decision.optional_available?"ready":"neutral";
+  }
+ }
+ const privateStatus=$("#privateSessionStatus");if(privateStatus)privateStatus.textContent=state.private_session?"ON":"OFF";
+ const copy=$("#copyBtn");if(copy&&!personaReady())copy.disabled=true;
+}
 function setOptionText(){
  $$("select[data-key]").forEach(sel=>{
    const key=sel.dataset.key;
@@ -189,7 +259,7 @@ function render(){
  $$("select[data-key]").forEach(s=>s.value=state[s.dataset.key]);
  $("#year_timeslip").value=state.year_timeslip;$("#yearRow").hidden=state.era!=="year_timeslip";$("#private_session").checked=state.private_session;
  $("#openChatgpt").href=safeChatTarget(config.chat_target&&config.chat_target.url);
- renderFavorites();renderContinuity();
+ renderFoundationStatus();renderFavorites();renderContinuity();
 }
 function persistState(){
  const ok=save();if(!ok)setStatus(tr("storage_unavailable"),"warn");return ok;
@@ -363,7 +433,7 @@ function clearContinuity(){
  renderContinuity();setStatus(tr("continuity_cleared"),"ok");
 }
 
-function getPrompt(){return L.fullPrompt(state,bootstrap,sessionContinuity())}
+function getPrompt(){if(!personaReady())throw new Error("persona_not_ready");return L.fullPrompt(state,bootstrap,sessionContinuity())}
 async function doCopy(){
  try{
   const prompt=getPrompt();
@@ -372,7 +442,7 @@ async function doCopy(){
   if(ok){setStatus(tr("copied")+" "+tr("paste"),"ok");$("#fallbackWrap").hidden=true}
   else{$("#fallbackWrap").hidden=false;$("#fallbackPrompt").value=prompt;setStatus(tr("copy_fail"),"warn")}
   $("#openChatgpt").focus();
- }catch(e){setStatus(tr("unexpected_error"),"error")}
+ }catch(e){setStatus(e&&e.message==="persona_not_ready"?personaStatusText():tr("unexpected_error"),"error")}
 }
 function exportSettings(){
  try{
@@ -486,9 +556,13 @@ window.__InooWebApp={
  getContinuity:()=>continuity?JSON.parse(JSON.stringify(continuity)):null,
  getContinuityHistory:()=>continuityHistory.map(s=>JSON.parse(JSON.stringify(s))),
  getPrompt,
- getPromptWithoutContinuity:()=>L.fullPrompt(state,bootstrap,null),
+ getPromptWithoutContinuity:()=>{if(!personaReady())throw new Error("persona_not_ready");return L.fullPrompt(state,bootstrap,null)},
+ getPersonaState:()=>personaState?JSON.parse(JSON.stringify(personaState)):null,
+ getPersonaDependency:()=>window.InooIntegrityFoundation.personaDependency(personaState),
+ getCapabilityProfile:()=>capabilityProfile?JSON.parse(JSON.stringify(capabilityProfile)):null,
  translations:T,config,safeChatTarget
 };
+window.dispatchEvent(new CustomEvent("inoo:foundation-ready",{detail:{persona_status:personaState&&personaState.status||"unknown"}}));
 decommissionLegacyOfflineRuntime().catch(()=>{/* Legacy offline runtime retirement is best-effort and never touches USER data. */});
 checkVersion();
 })();

@@ -132,3 +132,40 @@ html:not(.js-ready) .continuity-sensitive input{
 .device-gate-card{padding:20px}
 .device-gate-card .copyBtn{margin-top:14px}
 .device-gate-result{margin:12px 0 0;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:48vh;overflow:auto}
+
+/* Stage 17 H-04 — frozen session-status placement + foundation state */
+.session-status-card{padding:16px}
+.session-status-card h2{font-size:18px;margin:0 0 10px}
+.session-status-list{display:grid;gap:8px}
+.session-status-row,.voice-reservation{border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.88)}
+.session-status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:10px 12px;font-size:12px}
+.session-status-row b{font-size:13px;flex:0 0 auto}
+.session-state-value{min-width:0;text-align:right;color:var(--muted);font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+.session-state-value[data-state="ready"]{color:#315d42;font-weight:800}
+.session-state-value[data-state="error"]{color:#8b3f4c;font-weight:800}
+.session-private-row{align-items:flex-start}
+.session-private-toggle{flex:1 1 auto;min-width:0}
+.session-private-toggle .help{margin-top:2px}
+.voice-reservation{padding:0 12px}
+.voice-reservation summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;cursor:pointer;list-style-position:inside}
+.voice-reservation summary b{font-size:13px}
+.voice-reservation-grid{display:grid;gap:8px;border-top:1px solid var(--line);padding:10px 0 12px}
+.voice-reservation-grid>div{padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.75)}
+.voice-reservation-grid b{display:block;font-size:12px}
+.voice-reservation-grid small{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.45}
+@media(max-width:420px){
+ .session-status-row,.voice-reservation summary{align-items:flex-start;flex-direction:column}
+ .session-state-value{text-align:left}
+ .session-private-row{flex-direction:row}
+ .session-private-row .session-state-value{text-align:right}
+}
+.capability-panel{border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.88);padding:0 12px}
+.capability-panel summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;cursor:pointer;list-style-position:inside}
+.capability-panel summary b{font-size:13px}
+.capability-grid{display:grid;gap:7px;border-top:1px solid var(--line);padding:10px 0 12px}
+.capability-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.75);font-size:12px}
+.session-state-value[data-state="neutral"]{color:var(--muted);font-weight:700}
+@media(max-width:420px){
+ .capability-panel summary,.capability-line{align-items:flex-start;flex-direction:column}
+ .capability-panel .session-state-value{text-align:left}
+}

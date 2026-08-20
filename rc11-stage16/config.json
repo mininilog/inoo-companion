@@ -19,5 +19,16 @@
     "chat_target_allowlist": [
       "https://chatgpt.com"
     ]
+  },
+  "persona_package": {
+    "persona_package_id": "inoo-public-derived-persona",
+    "persona_package_version": "0.3",
+    "persona_package_hash_algorithm": "SHA-256",
+    "persona_package_hash": "2d964ef757a05239ae4f6d02c194c0be18bf634b356c7019743eb49a9dcc85e5",
+    "resource": "public_bootstrap.txt"
+  },
+  "capability_defaults": {
+    "project_assistance": "unknown",
+    "memory_assistance": "unknown"
   }
 }

@@ -42,6 +42,38 @@
 <button class="mode random-mode" data-mode="random" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">🎲</span><span class="label">랜덤</span></button>
 </div><div class="now"><b id="nowLabel">NOW PLAYING</b><span id="nowPlaying">JavaScript가 실행되면 현재 설정이 표시됩니다.</span></div></section>
 
+<section id="sessionStatus" class="section session-status" aria-labelledby="sessionStatusTitle">
+  <div class="card session-status-card">
+    <h2 id="sessionStatusTitle">세션 상태</h2>
+    <div class="session-status-list">
+      <div class="session-status-row session-private-row">
+        <div class="toggle session-private-toggle">
+          <input id="private_session" type="checkbox">
+          <div><label data-field-label="private_session" for="private_session">Private Session</label><div id="privateHelp" class="help"></div></div>
+        </div>
+        <span id="privateSessionStatus" class="session-state-value">OFF</span>
+      </div>
+      <div class="session-status-row"><b id="personaStatusLabel">Persona</b><span id="personaIntegrityStatus" class="session-state-value" role="status" aria-live="polite">확인 중</span></div>
+      <details id="chatCapabilityPanel" class="capability-panel">
+        <summary><b id="chatCapabilityLabel">ChatGPT 연결</b><span id="chatCapabilityStatus" class="session-state-value">기본 수동 전송 확인 중</span></summary>
+        <div class="capability-grid">
+          <div class="capability-line"><span id="manualCapabilityLabel">수동 복사/붙여넣기</span><span id="manualCapabilityStatus" class="session-state-value">사용 가능</span></div>
+          <div class="capability-line"><span id="projectCapabilityLabel">Project 보조</span><span id="projectCapabilityStatus" class="session-state-value">Unknown · 기본 방식 사용</span></div>
+          <div class="capability-line"><span id="memoryCapabilityLabel">Memory 보조</span><span id="memoryCapabilityStatus" class="session-state-value">Unknown · 기본 방식 사용</span></div>
+        </div>
+      </details>
+      <details id="voiceReactionPanel" class="voice-reservation">
+        <summary><b id="voiceReactionTitle">Voice &amp; Reaction</b><span id="voiceReactionStatus" class="session-state-value">Voice 미설정 · text continues</span></summary>
+        <div class="voice-reservation-grid">
+          <div><b id="voiceTtsTitle">Voice / TTS</b><small id="voiceTtsHelp">기기 음성 · 미리듣기 · 속도 · 피치 · 볼륨 자리</small></div>
+          <div><b id="reactionEngineTitle">Reaction</b><small id="reactionEngineHelp">ON/OFF · 강도 · 카테고리 · 확장 슬롯</small></div>
+          <div><b id="sttTitle">Mic / STT</b><small id="sttHelp">사용 가능 여부 · 입력 언어 · 권한/상태 자리</small></div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
 <section class="section favorites-section" aria-labelledby="favoritesTitle">
   <div class="favorites-head">
     <div>
@@ -139,7 +171,6 @@
 <div class="field"><label data-field-label="immersion" for="immersion">Immersion</label><select id="immersion" data-key="immersion"><option value="natural"></option><option value="deep"></option><option value="study_first"></option></select></div>
 <div class="field"><label data-field-label="support_style" for="support_style">Support</label><select id="support_style" data-key="support_style"><option value="listen_only"></option><option value="commiserate"></option><option value="opinion"></option><option value="practical_solution"></option><option value="challenge_me"></option></select></div>
 <div class="field"><label data-field-label="initiative" for="initiative">Initiative</label><select id="initiative" data-key="initiative"><option value="user_led"></option><option value="balanced"></option><option value="character_led"></option></select></div>
-<div class="field span-all"><div class="toggle"><input id="private_session" type="checkbox"><div><label data-field-label="private_session" for="private_session">Private Session</label><div id="privateHelp" class="help"></div></div></div></div>
 </div></details></section>
 
 <section class="card steps" aria-labelledby="copyText">
@@ -152,5 +183,5 @@
 <div class="fine"><div id="loginNote">ChatGPT에서 대화하려면 로그인이 필요할 수 있습니다.</div><div id="installNote">홈 화면 추가는 선택사항입니다. 설치하지 않아도 사용할 수 있어요.</div><div id="notice">비공식 · 공개 자료 기반 팬 컴패니언</div></div>
 </section>
 </main>
-<script src="logic.js"></script><script src="storage.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="controller_ui.js"></script>
+<script src="logic.js"></script><script src="storage.js"></script><script src="integrity_foundation.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="controller_ui.js"></script>
 </body></html>

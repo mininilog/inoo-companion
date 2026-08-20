@@ -182,6 +182,16 @@ function changePreviewText(preview){
   return lines.join("\n");
 }
 
+function runtimePersonaState(){
+  const runtime=global.__InooWebApp;
+  if(!runtime||typeof runtime.getPersonaState!=="function")return null;
+  try{return runtime.getPersonaState();}catch(_){return null;}
+}
+function runtimePersonaReady(){
+  const state=runtimePersonaState();
+  return !!(state&&state.status==="persona_ready");
+}
+
 async function copyTransportText(text,navigatorObj=global.navigator){
   if(!text)return false;
   try{
@@ -195,8 +205,13 @@ async function initControllerUI(){
   if(!global.document||!global.document.getElementById("memoryController"))return null;
   if(!global.InooStorage){renderDetected({state:STATES.UNAVAILABLE});return null;}
 
-  let db=null,info=null,pendingInit=null,sessionPacket=null,pendingChange=null;
+  let db=null,info=null,pendingInit=null,sessionPacket=null,pendingChange=null,foundationSignalPending=false;
   const root=global.document;
+  const onFoundationReady=()=>{
+    foundationSignalPending=true;
+    if(db)refresh().catch(()=>{});
+  };
+  if(global.addEventListener)global.addEventListener("inoo:foundation-ready",onFoundationReady,{once:true});
   const status=root.getElementById("memoryControllerStatus");
   const initPreview=root.getElementById("memoryInitPreview");
   const prepButton=root.getElementById("btnMemoryInitialize");
@@ -232,7 +247,7 @@ async function initControllerUI(){
     if(initPreview){initPreview.hidden=true;initPreview.textContent="";}
     if(initApply)initApply.hidden=true;
     if(info.state!==STATES.READY)clearConversationState();
-    else if(sessionCopy)sessionCopy.disabled=false;
+    else if(sessionCopy)sessionCopy.disabled=!runtimePersonaReady();
     return info;
   }
 
@@ -265,6 +280,7 @@ async function initControllerUI(){
   try{
     db=await global.InooStorage.openDatabase();
     await refresh();
+    if(foundationSignalPending)await refresh();
   }catch(e){
     renderDetected({state:STATES.UNAVAILABLE,reason:e&&e.code||String(e)},root);
     try{if(db)global.InooStorage.closeDatabase(db)}catch(_){}
@@ -322,6 +338,7 @@ async function initControllerUI(){
       sessionCopy.disabled=true;
       try{
         if(info.state!==STATES.READY)throw uiError("canonical_state_not_ready");
+        if(!runtimePersonaReady())throw uiError("persona_not_ready");
         const runtime=global.__InooWebApp;
         if(!runtime||typeof runtime.getPromptWithoutContinuity!=="function"||typeof runtime.getState!=="function")throw uiError("runtime_prompt_unavailable");
         const currentState=runtime.getState();
@@ -347,8 +364,10 @@ async function initControllerUI(){
         }
       }catch(e){
         sessionPacket=null;
-        if(status)status.textContent="세션 프롬프트를 만들 수 없습니다. 저장소 상태를 다시 확인하세요.";
-      }finally{sessionCopy.disabled=false;}
+        if(status)status.textContent=e&&e.code==="persona_not_ready"?
+          "Persona 무결성/로드 상태가 준비되지 않아 대화 프롬프트 생성을 중지했습니다. USER 데이터는 변경하지 않습니다.":
+          "세션 프롬프트를 만들 수 없습니다. 저장소 상태를 다시 확인하세요.";
+      }finally{sessionCopy.disabled=info.state!==STATES.READY||!runtimePersonaReady();}
     });
   }
 
