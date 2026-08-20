@@ -1,0 +1,36 @@
+# Never commit secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Owner/runtime/private project files
+1_MASTER_PERSONA*
+2_CURRENT_RUNTIME*
+3_FULL_CHECKPOINT*
+*checkpoint*
+*source_recovery*
+PRIVATE_USER_STATE*
+PERSONAL_ASSET*
+*.zip
+
+# Source media / transcripts
+*.mp3
+*.m4a
+*.wav
+*.mp4
+*.mov
+*.mkv
+
+# Local/dev noise
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+node_modules/
+playwright-report/
+test-results/

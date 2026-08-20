@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eaf8ff">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Inoo Companion · Device Storage Gate</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="wrap">
+  <section class="card device-gate-card">
+    <div class="eyebrow">RC11 DEVICE GATE · CANDIDATE ONLY</div>
+    <h1>실기기 저장소 진단</h1>
+    <p class="sub">제품 USER DB는 건드리지 않고 별도 진단용 IndexedDB에서만 테스트합니다.</p>
+    <div id="gateStatus" class="status">아직 실행하지 않았습니다.</div>
+    <button id="gateRun" class="copyBtn" type="button">진단 실행</button>
+    <button id="gateReload" class="openBtn" type="button" hidden>새로고침 후 persistence 재검사</button>
+    <button id="gateCopy" class="memory-secondary" type="button" hidden>진단 결과 복사</button>
+    <pre id="gateResult" class="device-gate-result" hidden></pre>
+    <p class="fine">주의: 이 페이지의 PASS는 해당 브라우저 저장 컨테이너에서의 동작만 의미합니다. Safari, 홈 화면 PWA, Android Chrome/설치형 Web App은 각각 별도로 실행하세요.</p>
+  </section>
+</main>
+<script src="device_gate.js"></script>
+</body>
+</html>

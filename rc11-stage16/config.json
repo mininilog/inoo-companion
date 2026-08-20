@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.9.0",
+  "app_version": "0.9.0",
+  "runtime_version": "1.4.0-rc10",
+  "chat_target": {
+    "type": "generic_chatgpt",
+    "url": "https://chatgpt.com/"
+  },
+  "distribution": {
+    "public_entry": "https_only",
+    "local_file_supported": false,
+    "install_required": false,
+    "shell_required": false,
+    "zip_required_for_recipient": false
+  },
+  "security": {
+    "direct_api_calls": false,
+    "client_side_secrets_allowed": false,
+    "chat_target_allowlist": [
+      "https://chatgpt.com"
+    ]
+  }
+}

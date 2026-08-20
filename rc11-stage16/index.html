@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eaf8ff">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; frame-src 'none'; media-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<title>Inoo Companion</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="previewFallback" class="nojs-banner preview-fallback" aria-live="polite">
+  <strong>로컬 미리보기</strong><br>
+  버튼 글자나 NOW PLAYING이 비어 보이면 JavaScript가 실행되지 않은 것입니다.
+  파일이 고장 난 것이 아니며, 실제 사용은 HTTPS 공유 링크에서 합니다.
+</div>
+<main class="wrap">
+<header class="card">
+<div class="eyebrow">COMPANION CONTROL PANEL · WEB v0.9</div>
+<h1 id="title">오늘은 어떤 모드로?</h1><div id="subtitle" class="sub">링크를 열고 모드를 고르면 됩니다. 앱 설치·ZIP·터미널은 필요 없어요.</div>
+<div class="locale"><label id="localeLabel" for="localeSelect">화면 언어</label><select id="localeSelect" data-key="locale"><option value="auto">Auto</option><option value="ko">한국어</option><option value="ja">日本語</option><option value="en">English</option></select></div>
+</header>
+
+<div id="localWarning" class="warning" hidden>이 파일은 로컬 미리보기용입니다. 실제 사용은 HTTPS 공유 링크에서 합니다.</div>
+<div id="updateBar" class="update" hidden><span id="updateText">새 버전이 준비됐어요.</span><button id="refreshBtn">새 버전 적용</button></div>
+<section id="firstUse" class="card first" hidden><h2 id="firstTitle">처음 사용하시나요?</h2><p id="firstBody">모드를 고르고 설정을 복사한 뒤 ChatGPT에서 붙여넣으면 됩니다.</p><button id="gotIt">알겠어요</button></section>
+
+<section class="section" aria-labelledby="quickTitle"><h2 id="quickTitle">빠른 시작</h2><div class="modes">
+<button class="mode" data-mode="talk" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">💬</span><span class="label">수다</span></button>
+<button class="mode" data-mode="phone" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">📞</span><span class="label">전화</span></button>
+<button class="mode" data-mode="date" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">🎀</span><span class="label">데이트</span></button>
+<button class="mode" data-mode="drink" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">🥂</span><span class="label">술자리</span></button>
+<button class="mode" data-mode="radio" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">📻</span><span class="label">라디오</span></button>
+<button class="mode" data-mode="walk" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">🌙</span><span class="label">산책</span></button>
+<button class="mode" data-mode="timeslip" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">🕰️</span><span class="label">타임슬립</span></button>
+<button class="mode" data-mode="study" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">✏️</span><span class="label">일본어 공부</span></button>
+<button class="mode random-mode" data-mode="random" aria-pressed="false"><span class="mark" aria-hidden="true"></span><span class="emoji" aria-hidden="true">🎲</span><span class="label">랜덤</span></button>
+</div><div class="now"><b id="nowLabel">NOW PLAYING</b><span id="nowPlaying">JavaScript가 실행되면 현재 설정이 표시됩니다.</span></div></section>
+
+<section class="section favorites-section" aria-labelledby="favoritesTitle">
+  <div class="favorites-head">
+    <div>
+      <h2 id="favoritesTitle">즐겨찾기</h2>
+      <div id="favoritesHelp" class="help">현재 설정을 저장해 두고 다시 불러올 수 있어요.</div>
+    </div>
+    <button id="btnSaveFavorite" class="mini-action">⭐ 현재 설정 저장</button>
+  </div>
+  <div id="favoritesEmpty" class="favorites-empty">아직 저장된 즐겨찾기가 없어요.</div>
+  <div id="favoritesList" class="favorites-list" aria-live="polite"></div>
+</section>
+
+
+<section class="section continuity-section" aria-labelledby="continuityTitle">
+  <div class="continuity-head">
+    <div>
+      <h2 id="continuityTitle">장기 기록</h2>
+      <div id="continuityHelp" class="help">대화 원문 대신 필요한 맥락만 압축해서 이 기기에 저장합니다.</div>
+    </div>
+  </div>
+  <div class="continuity-current">
+    <b id="continuityCurrentLabel">현재 장기 기록</b>
+    <div id="continuityCurrent">아직 저장된 장기 기록이 없어요.</div>
+    <div id="continuityCounts" class="continuity-counts"></div>
+  </div>
+  <div class="continuity-actions">
+    <button id="btnContinuityRequest">🧠 세션 정리 요청 복사</button>
+    <button id="btnContinuityRollback">↩︎ 이전 기록 복원</button>
+  </div>
+  <label class="continuity-sensitive">
+    <input id="continuitySensitive" type="checkbox">
+    <span><b id="continuitySensitiveLabel">민감한 개인 맥락 포함 허용</b><small id="continuitySensitiveHelp">기본은 꺼짐. 비밀번호·토큰·금융/신분 식별정보·정확한 집 주소·제3자 비밀은 켜도 저장하지 않습니다.</small></span>
+  </label>
+  <details id="continuityImport" class="continuity-import">
+    <summary id="continuityImportSummary">ChatGPT가 만든 장기 기록 가져오기</summary>
+    <div id="continuityImportHelp" class="help">세션 정리 결과의 JSON만 붙여넣으세요. 검사 전에는 저장되지 않습니다.</div>
+    <textarea id="continuityInput" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" data-input-purpose="continuity-json-only" aria-label="Long-term continuity JSON"></textarea>
+    <div class="continuity-import-actions">
+      <button id="btnContinuityInspect">1. 검사</button>
+      <button id="btnContinuityApply" hidden>2. 확인하고 저장</button>
+    </div>
+    <div id="continuityPreview" class="continuity-preview" hidden></div>
+  </details>
+  <button id="btnContinuityClear" class="continuity-clear">장기 기록 삭제</button>
+</section>
+
+
+<section id="memoryController" class="section memory-controller" aria-labelledby="memoryControllerTitle">
+  <div class="card memory-controller-card">
+    <div class="memory-controller-head">
+      <div>
+        <div class="eyebrow">RC11 CANDIDATE</div>
+        <h2 id="memoryControllerTitle">장기 기억 컨트롤러</h2>
+      </div>
+      <span id="memoryControllerBadge" class="memory-badge">확인 중</span>
+    </div>
+    <p id="memoryControllerStatus" class="memory-controller-status">IndexedDB 상태를 확인하고 있습니다.</p>
+    <a class="memory-diagnostic-link" href="device_gate.html">실기기 IndexedDB 진단 열기</a>
+
+    <div id="memoryInitArea" class="memory-controller-block" hidden>
+      <button id="btnMemoryInitialize" class="memory-primary" type="button">이전 기록 검사</button>
+      <div id="memoryInitPreview" class="memory-review" hidden></div>
+      <button id="btnMemoryInitializeApply" class="memory-primary" type="button" hidden>확인하고 장기 기억 활성화</button>
+    </div>
+
+    <div id="memorySessionArea" class="memory-controller-block" hidden>
+      <button id="btnMemorySessionCopy" class="memory-primary" type="button">1. 기억 포함 세션 프롬프트 복사</button>
+      <button id="btnMemoryUpdateRequest" class="memory-secondary" type="button" disabled>2. 대화 후 기억 정리 요청 복사</button>
+      <textarea id="memoryTransportText" class="memory-transport-text" readonly hidden aria-label="Manual transport text"></textarea>
+      <label class="memory-label" for="memoryResponseInput">3. ChatGPT의 기억 정리 응답 붙여넣기</label>
+      <textarea id="memoryResponseInput" maxlength="32768" spellcheck="false" autocapitalize="off" autocomplete="off" data-input-purpose="memory-changeset-json-only" disabled readonly></textarea>
+      <button id="btnMemoryInspect" class="memory-secondary" type="button" disabled>응답 검사</button>
+
+      <label class="memory-sensitive-opt">
+        <input id="memorySensitiveOptIn" type="checkbox" disabled>
+        <span>민감 항목을 이번 저장에서 명시적으로 허용</span>
+      </label>
+
+      <div id="memoryChangePreview" class="memory-review" hidden></div>
+      <button id="btnMemoryApply" class="memory-primary" type="button" hidden>4. 확인하고 기억 저장</button>
+    </div>
+  </div>
+</section>
+
+<section class="section"><details class="card"><summary id="advancedSummary">세부 설정</summary><div class="fields">
+<div class="field"><label data-field-label="era" for="era">Era</label><select id="era" data-key="era"><option value="current"></option><option value="20s_early"></option><option value="20s_late"></option><option value="30s_early"></option><option value="year_timeslip"></option></select></div>
+<div class="field" id="yearRow" hidden><label data-field-label="year_timeslip" for="year_timeslip">Year</label><input id="year_timeslip" type="number" min="2009" max="2026" inputmode="numeric"></div>
+<div class="field"><label data-field-label="scene" for="scene">Scene</label><select id="scene" data-key="scene"><option value="daily"></option><option value="companion"></option><option value="phone"></option><option value="date"></option><option value="drinking"></option><option value="radio"></option><option value="vlog_walk"></option><option value="timeslip"></option><option value="travel"></option><option value="late_night"></option></select></div>
+<div class="field"><label data-field-label="activity" for="activity">Activity</label><select id="activity" data-key="activity"><option value="casual_talk"></option><option value="listen_vent"></option><option value="think_together"></option><option value="japanese_study"></option><option value="practical_rehearsal"></option><option value="watch_read_together"></option><option value="daily_reflection"></option></select></div>
+<div class="field"><label data-field-label="relationship" for="relationship">Relationship</label><select id="relationship" data-key="relationship"><option value="new"></option><option value="familiar"></option><option value="close"></option><option value="long_term_companion"></option></select></div>
+<div class="field"><label data-field-label="state" for="state">State</label><select id="state" data-key="state"><option value="normal"></option><option value="playful"></option><option value="high_energy"></option><option value="tired"></option><option value="sick"></option><option value="drinking_0"></option><option value="intoxicated_1"></option><option value="intoxicated_2"></option><option value="intoxicated_3"></option><option value="sleepy_after_drink"></option></select></div>
+<div class="field"><label data-field-label="language_support" for="language_support">Language</label><select id="language_support" data-key="language_support"><option value="jp_immersion"></option><option value="natural_mixed"></option><option value="kr_assist"></option><option value="kr_companion"></option></select></div>
+<div class="field"><label data-field-label="proficiency" for="proficiency">Japanese level</label><select id="proficiency" data-key="proficiency"><option value="adaptive"></option><option value="n5_comfort"></option><option value="n5_challenge"></option><option value="n4_comfort"></option><option value="n4_challenge"></option></select></div>
+<div class="field"><label data-field-label="learning_mode" for="learning_mode">Learning mode</label><select id="learning_mode" data-key="learning_mode"><option value="free"></option><option value="light"></option><option value="study"></option><option value="shadowing"></option></select></div>
+<div class="field"><label data-field-label="immersion" for="immersion">Immersion</label><select id="immersion" data-key="immersion"><option value="natural"></option><option value="deep"></option><option value="study_first"></option></select></div>
+<div class="field"><label data-field-label="support_style" for="support_style">Support</label><select id="support_style" data-key="support_style"><option value="listen_only"></option><option value="commiserate"></option><option value="opinion"></option><option value="practical_solution"></option><option value="challenge_me"></option></select></div>
+<div class="field"><label data-field-label="initiative" for="initiative">Initiative</label><select id="initiative" data-key="initiative"><option value="user_led"></option><option value="balanced"></option><option value="character_led"></option></select></div>
+<div class="field span-all"><div class="toggle"><input id="private_session" type="checkbox"><div><label data-field-label="private_session" for="private_session">Private Session</label><div id="privateHelp" class="help"></div></div></div></div>
+</div></details></section>
+
+<section class="card steps" aria-labelledby="copyText">
+<div class="steps-head">STEP 2 → STEP 3</div>
+<button id="copyBtn" class="copyBtn"><span id="copyText">설정 복사</span><small id="copySub">복사 후 ChatGPT를 열어 붙여넣어요</small></button>
+<div id="nextStep" hidden><a id="openChatgpt" class="openBtn" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer"><span id="openText">ChatGPT 열기</span><small id="openSub">열리면 입력창에 붙여넣기</small></a></div>
+<div id="status" class="status" role="status" aria-live="polite">미리보기에서는 기능이 비활성화되어 있습니다. 실제 사용은 HTTPS 공유 링크에서 해주세요.</div>
+<div id="fallbackWrap" class="fallback" hidden><textarea id="fallbackPrompt" readonly aria-label="Session setup text"></textarea><button id="manualCopy">텍스트 선택해서 복사하기</button></div>
+<div class="utility"><button id="btnPrevious">직전 설정 복원</button><button id="btnBackup">내 설정 백업</button><label id="restoreLabel" class="action"><span id="restoreLabelText">설정 복원</span><input id="restoreFile" type="file" accept=".json,application/json"></label><button id="btnReset">기본값</button></div>
+<div class="fine"><div id="loginNote">ChatGPT에서 대화하려면 로그인이 필요할 수 있습니다.</div><div id="installNote">홈 화면 추가는 선택사항입니다. 설치하지 않아도 사용할 수 있어요.</div><div id="notice">비공식 · 공개 자료 기반 팬 컴패니언</div></div>
+</section>
+</main>
+<script src="logic.js"></script><script src="storage.js"></script><script src="migration.js"></script><script src="user_state.js"></script><script src="migration_merge.js"></script><script src="session_vertical_slice.js"></script><script src="app.js"></script><script src="controller_ui.js"></script>
+</body></html>
