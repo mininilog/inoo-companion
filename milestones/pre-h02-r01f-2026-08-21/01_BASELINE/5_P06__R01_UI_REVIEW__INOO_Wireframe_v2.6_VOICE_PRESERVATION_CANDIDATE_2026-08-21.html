@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>INOO R-01E Wireframe v2.5 · Cross-view Review Candidate</title>
+<style>
+:root{
+  --ink:#37414c;--ink-strong:#27343f;--muted:#657582;--line:#dceaf4;--line-soft:#eaf3f9;
+  --text-brand:17px;--text-section:16px;--text-action:14px;--text-preset:13.5px;--text-setting:13px;--text-support:12.5px;--text-note:12px;--text-meta:11px;
+  --bg:#f3faff;--white:#fff;--pink:#fff4f8;--pink2:#f8e4ed;--pink3:#efcddc;
+  --blue:#edf8ff;--blue2:#d8edf9;--blue3:#c7e5f5;--lav:#f7f5ff;--mint:#f2faf8;
+  --warn:#fff9eb;--danger:#fff2f4;--danger-line:#e9b6c0;--ok:#f0f8f3;
+  --shadow:0 14px 38px rgba(86,62,77,.07);--shadow-soft:0 6px 18px rgba(104,78,94,.055);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","SUIT","Noto Sans KR","Segoe UI",sans-serif;
+  line-height:1.52;letter-spacing:-.012em;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(215,238,252,.88),transparent 31%),
+    radial-gradient(circle at 88% 12%,rgba(246,223,235,.38),transparent 22%),
+    linear-gradient(180deg,#f5fbff 0%,#eef8fd 56%,#f7fbfe 100%);
+}
+.page{max-width:1580px;margin:0 auto;padding:24px}.title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+h1{font-size:24px;line-height:1.28;letter-spacing:-.035em;margin:0 0 7px;font-weight:760;color:var(--ink-strong)}
+.lead{font-size:14px;color:var(--muted);max-width:980px;line-height:1.6}.status{display:flex;gap:6px;flex-wrap:wrap}
+.tag,.badge{border:1px solid var(--line);background:rgba(255,255,255,.9);border-radius:999px;font-size:var(--text-meta);font-weight:700;padding:4px 8px;letter-spacing:0}.tag.core{background:var(--pink)}.tag.req{background:var(--blue)}.tag.res{border-style:dashed;background:var(--lav)}.tag.restore{background:#fff8ea}.tag.block{background:var(--danger)}
+.workspace{display:grid;grid-template-columns:minmax(370px,440px) minmax(760px,1fr);gap:24px;align-items:start;margin-top:20px}.panel-title{font-size:16px;font-weight:760;margin:0 0 10px;color:var(--ink-strong)}.caption{font-size:12.5px;color:var(--muted);margin:7px 0 0;line-height:1.55}
+.phone{width:390px;max-width:100%;height:844px;margin:auto;border:1px solid #d5e6f1;border-radius:36px;background:rgba(249,253,255,.96);overflow:hidden;box-shadow:0 18px 50px rgba(83,60,73,.10)}
+.phone-scroll{height:100%;overflow:auto;padding:15px 13px 90px}.phone-top{position:sticky;top:0;z-index:8;background:rgba(247,252,255,.95);backdrop-filter:blur(14px);padding:3px 0 9px;border-bottom:1px solid rgba(216,234,245,.80)}
+.brandrow,.row{display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:780;font-size:var(--text-brand);letter-spacing:-.03em;color:var(--ink-strong)}
+.days{font-size:var(--text-support);color:#776c78;margin-top:2px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.day-count{position:relative;color:#655b68;font-weight:720}.day-sparkle{display:inline-block;position:relative;width:11px;height:11px;margin-left:1px;opacity:.58;transform:translateY(-1px)}
+.day-sparkle::before,.day-sparkle::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:999px;background:linear-gradient(180deg,#e8a8c1,#b9d9f0)}
+.day-sparkle::before{width:1.3px;height:9px}.day-sparkle::after{width:9px;height:1.3px}.day-sparkle i{position:absolute;left:50%;top:50%;width:4.5px;height:4.5px;transform:translate(-50%,-50%) rotate(45deg);border:1px solid rgba(213,153,178,.68);background:rgba(255,255,255,.72);border-radius:1px}
+@media (prefers-reduced-motion:no-preference){.day-sparkle{animation:softTwinkle 3.8s ease-in-out infinite}@keyframes softTwinkle{0%,100%{opacity:.40;transform:translateY(-1px) scale(.93)}50%{opacity:.72;transform:translateY(-1px) scale(1.04)}}}
+.locale{font-size:var(--text-support);border:1px solid var(--line);padding:6px 9px;border-radius:12px;background:rgba(255,255,255,.88);min-height:48px;display:flex;align-items:center;color:#5f6c78}
+.anchorbar{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:11px}.anchor{min-height:48px;border:1px solid var(--line);background:rgba(255,255,255,.88);border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;box-shadow:0 3px 10px rgba(93,72,84,.025)}
+.ico{width:17px;height:17px;border:1.4px solid #877d88;border-radius:6px;margin-bottom:3px;position:relative}.ico:after{content:"";position:absolute;inset:4px;border-top:1.3px solid #877d88}
+.section{border:1px solid rgba(232,219,226,.92);border-radius:21px;padding:12px;margin-top:13px;box-shadow:0 4px 16px rgba(100,75,90,.025)}
+.start{background:linear-gradient(180deg,rgba(235,247,255,.97),rgba(248,252,255,.97))}.learn{background:linear-gradient(180deg,rgba(241,249,255,.98),rgba(251,253,255,.98))}.memory{background:linear-gradient(180deg,rgba(247,246,255,.97),rgba(253,252,255,.97))}.manage{background:linear-gradient(180deg,rgba(243,250,249,.97),rgba(252,255,254,.97))}
+.section-head{display:flex;justify-content:space-between;align-items:center}.section-head h2{font-size:var(--text-section);margin:0;font-weight:760;letter-spacing:-.025em;color:var(--ink-strong)}.small{font-size:var(--text-support);color:var(--muted)}
+.card{background:rgba(255,255,255,.92);border:1px solid rgba(235,224,230,.95);border-radius:16px;padding:11px;margin-top:9px;box-shadow:var(--shadow-soft)}.card.tight{padding:9px 10px}.card.reserved{border-style:dashed;background:rgba(255,255,255,.78)}.card.warn{background:var(--warn)}.card.danger{background:var(--danger);border-color:var(--danger-line)}.card.softpink{background:linear-gradient(180deg,#fffafd,#fff6fa)}.card.softblue{background:linear-gradient(180deg,#fbfeff,#f3faff)}.card.ok{background:var(--ok)}
+.card strong{color:#34414b}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.chip{font-size:var(--text-support);border:1px solid var(--line);background:rgba(255,255,255,.94);border-radius:999px;padding:7px 10px;line-height:1.2;min-height:44px;display:inline-flex;align-items:center;justify-content:center}.chip.primary{background:#e4f4fd;border-color:#bfdff1;font-weight:760}.chip.blue{background:#eaf7ff;border-color:#c6e4f5;font-weight:760}.chip.pink{background:#fbe8f0;border-color:#edcbd9;font-weight:760}.chip.restore{background:#fff7e9}.chip.legacy{border-style:dashed}.chip.disabled{color:#98909a;background:#fbfafb;border-style:dashed}.chip.safety{background:#fff4f5}
+.quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:9px}.quick-choice{min-height:54px;border:1px solid #cfe3f0;background:linear-gradient(180deg,#fbfeff,#eef8fe);border-radius:18px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 6px;font-size:var(--text-action);font-weight:760;line-height:1.2;box-shadow:0 4px 12px rgba(74,129,161,.06)}.quick-choice.selected{background:linear-gradient(180deg,#e6f5fd,#dff1fb);border-color:#afd5ea}.quick-choice.study{background:linear-gradient(180deg,#edf8ff,#e2f2fb);border-color:#b9dced}.quick-choice.random{background:linear-gradient(180deg,#f8f7ff,#f2f1fc);border-color:#dcd8ee}.preset-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.preset-choice{min-height:50px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;font-size:var(--text-preset);font-weight:730}.preset-choice.pink{background:#fff2f7;border-color:#edcfdb}.preset-choice.warm{background:#fff8ea;border-color:#eee0bc}.preset-choice.legacy{border-style:dashed}.desktop .quick-grid{grid-template-columns:repeat(5,minmax(76px,1fr))}.desktop .preset-grid{grid-template-columns:repeat(4,minmax(90px,1fr))}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.btn{min-height:48px;border:1px solid #ded2d8;border-radius:14px;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;font-size:var(--text-action);font-weight:720;text-align:center;padding:7px;box-shadow:0 3px 11px rgba(100,75,90,.025)}.btn.primary{background:linear-gradient(180deg,#fdebf2,#fbe3ed);border-color:#ebbdce}.btn.blue{background:linear-gradient(180deg,#eef9ff,#e5f4fd);border-color:#bedcf0}.btn.full{grid-column:1/-1}.btn.disabled{border-style:dashed;color:#8f878f;background:#fbfafb}.divider{height:1px;background:var(--line-soft);margin:10px 0}.note{font-size:var(--text-note);color:#756c76;margin-top:6px;line-height:1.5}.warnline{border-left:3px solid #e3bd68;padding-left:8px}.dangerline{border-left:3px solid #d9939e;padding-left:8px}
+.setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.setting{border:1px solid var(--line);border-radius:13px;padding:8px;background:rgba(255,255,255,.92)}.setting b{display:block;font-size:var(--text-setting);margin-bottom:4px;font-weight:760}.setting span{font-size:var(--text-support);color:#706873;line-height:1.45}.expanded-title{font-size:var(--text-setting);font-weight:760;margin-top:9px}.levelrow{display:grid;grid-template-columns:1fr 1fr;gap:7px}.levelbox{border:1px solid var(--line);border-radius:13px;padding:8px;background:rgba(255,255,255,.93)}.levelbox strong{font-size:var(--text-setting)}.levelbox div{font-size:var(--text-support);color:var(--muted);margin-top:4px}
+.degraded{margin-top:11px;background:var(--warn);border:1px solid #ebdca9;border-radius:15px;padding:10px}.degraded strong{font-size:var(--text-support)}
+.desktop{border:1px solid #e0d5db;border-radius:24px;background:rgba(255,255,255,.96);overflow:hidden;box-shadow:var(--shadow)}.desktop-head{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,#f4fbff 0%,#fbfdff 72%,#fff8fb 100%)}.desktop-body{display:grid;grid-template-columns:145px 1fr;min-height:1120px}.rail{padding:14px 10px;border-right:1px solid var(--line);background:linear-gradient(180deg,#f4fbff,#f8fcff)}.rail .anchor{margin-bottom:8px;min-height:52px}.canvas{padding:15px;display:grid;grid-template-columns:1fr 1fr;gap:15px;align-items:start;background:linear-gradient(180deg,#f3faff,#f7fbfe)}.canvas .section{margin:0}.span2{grid-column:1/-1}.desktop .setting-grid{grid-template-columns:repeat(3,1fr)}
+.audit{background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:20px;margin-top:24px;padding:16px;box-shadow:var(--shadow)}.audit h3{font-size:16px;margin:0 0 10px;font-weight:760}.audit h4{font-size:14px;margin:17px 0 7px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{background:#f3f9fd}.pass{font-weight:760}.pending{font-weight:760;color:#8d631e}.block{font-weight:760;color:#a84c5e}.legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.design-note{margin-top:12px;padding:10px 12px;border:1px solid #eadde4;border-radius:15px;background:linear-gradient(90deg,#eef9ff,#f7fbff 72%,#fff6fa);font-size:var(--text-support);color:#6f6570;line-height:1.55}.design-note strong{color:#4d454e}
+@media(max-width:1200px){.workspace{grid-template-columns:1fr}.desktop-body{grid-template-columns:120px 1fr}.canvas{grid-template-columns:1fr}.span2{grid-column:auto}.desktop .setting-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.page{padding:14px}.desktop-body{grid-template-columns:1fr}.rail{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-right:0;border-bottom:1px solid var(--line)}.rail .anchor{margin:0}.setting-grid,.desktop .setting-grid{grid-template-columns:1fr}}
+.tap-target{min-height:48px;display:flex;align-items:center}.tap-target>.row{width:100%}
+@media(max-width:360px){.days-label{display:none}.locale{padding-left:8px;padding-right:8px;font-size:12px}.brandrow{gap:6px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="title">
+    <div>
+      <h1>INOO — R-01E Mobile/Desktop Wireframe v2.5</h1>
+      <div class="lead">기획·보존 검수 전용. 제품 코드가 아니며 실제 저장/복사/ChatGPT 연결은 동작하지 않는다. R-01A/B 결과를 반영한 UI placement candidate로, 사용자 승인 전 H-02 PASS/FREEZE가 아니다.</div>
+    </div>
+    <div class="status"><span class="tag core">CORE PRESERVED</span><span class="tag restore">RESTORE INCLUDED</span><span class="tag res">FUTURE RESERVED</span><span class="tag block">H-02 BLOCKED</span></div>
+  </div>
+  <div class="legend"><span class="tag core">CORE = 대화·위로·일본어</span><span class="tag req">REQUIRED = 다음 후보 기능/경로 필요</span><span class="tag res">RESERVED = 자리만 지금 확보</span><span class="tag restore">RESTORE = 과거 접근성 복원</span></div>
+  <div class="design-note"><strong>R-01D Visual + Mobile Direction</strong> · 젊고 감성적인 airy pastel UI를 지향하되, 전체 바탕과 메인 컬러는 연한 하늘색을 우세하게 사용하고 핑크는 선택·위로·포인트에 제한적으로 섞는다. 학습·설정 정보는 선명한 sans-serif와 충분한 대비로 유지한다. `함께한 지 N일`의 반짝임은 숫자 뒤에 은은한 1개만 사용하며 과한 별/이모지 장식은 사용하지 않는다. Quick Start는 모바일에서 3×3, 최소 54px 높이의 넓은 터치 타깃으로 설계한다. 타이포그래피는 B안으로 확정하며 핵심 정보는 12.5~17px 계층을 유지하고, action은 14px을 기준으로 한다. 작은 action chip은 시각 높이 44px 이상, 실제 구현 hit area는 48×48px 이상을 목표로 한다. CORE/KEEP/RESTORE/RESERVED 같은 검수용 라벨은 제품 UI에 그대로 노출하지 않는다.</div>
+
+  <div class="workspace">
+    <section>
+      <div class="panel-title">모바일 · 390 × 844 기준 · 전체 기능은 스크롤/펼침으로 보존</div>
+      <div class="phone"><div class="phone-scroll">
+        <div class="phone-top">
+          <div class="brandrow"><div><div class="brand">INOO</div><div class="days">함께한 지 <span class="day-count">252일</span><span class="day-sparkle" aria-hidden="true"><i></i></span></div></div><div class="locale">화면 언어&nbsp; Auto ▾</div></div>
+          <div class="anchorbar"><div class="anchor"><span class="ico"></span>시작</div><div class="anchor"><span class="ico"></span>학습</div><div class="anchor"><span class="ico"></span>기억</div><div class="anchor"><span class="ico"></span>관리</div></div>
+        </div>
+
+        <div class="card tight softblue" data-p01b-alert-hub="mobile" data-alert-routes="learning-capture memory-update new-chat recovery-backup update"><div class="row"><strong>알림 · 이번 주 기억을 정리할 때예요</strong><span class="badge">+3 〉</span></div><div class="small">7일 경과 · 누르면 해당 기능으로 바로 이동 · 학습 기록/기억/백업/업데이트 알림은 이 한 자리에서 안내 · 평소 숨김</div></div>
+
+        <div class="degraded"><div class="row"><strong>저장 상태 배너 자리</strong><span class="badge">평소 숨김</span></div><div class="note">저장 장애 시 false-save 금지 · 읽기/Recovery 유지 · 안전하면 임시 대화 전용 모드 제공.</div></div>
+
+        <section class="section start">
+          <div class="section-head"><h2>① 시작</h2><span class="small">Companion CORE</span></div>
+          <div class="card"><div class="row"><strong>빠른 시작</strong><span class="small">기본 9 · 상황별 4</span></div><div class="expanded-title">기본</div><div class="quick-grid"><span class="quick-choice selected">수다</span><span class="quick-choice">전화</span><span class="quick-choice">데이트</span><span class="quick-choice">술자리</span><span class="quick-choice">라디오</span><span class="quick-choice">산책</span><span class="quick-choice">타임슬립</span><span class="quick-choice study">일본어 공부</span><span class="quick-choice random">랜덤</span></div><div class="divider"></div><div class="expanded-title">상황별 바로가기</div><div class="preset-grid"><span class="preset-choice warm">밤전화</span><span class="preset-choice pink">오늘 좀 들어줘</span><span class="preset-choice warm">한잔하자</span><span class="preset-choice legacy">랜덤 추천</span></div><div class="note">자주 쓰는 상황을 한 번에 시작할 수 있는 바로가기.</div></div>
+          <div class="card tight"><div class="row"><strong>즐겨찾기</strong><span class="small">저장 · 적용 · 삭제 · 순서 〉</span></div><div class="chips"><span class="chip">내 밤전화</span><span class="chip">공부 집중</span><span class="chip legacy">기본 shortcut 보존</span></div><div class="note">기존 사용자 Favorites를 덮어쓰지 않고 과거 기본 shortcut 접근을 별도 보존.</div></div>
+          <div class="card tight"><div class="row"><strong>현재 설정 · NOW PLAYING</strong><span class="badge">LIVE SUMMARY</span></div><div class="small">전화 · 친한 사이 · 장난기 · N5 현재 수준 · 가볍게 학습</div><div class="note">랜덤 결과 표시 · 일본어 공부 활성 시 ‘학습 기록 추가’ shortcut 노출.</div></div><div class="card tight" data-p02-random-reroll="mobile"><div class="row"><strong>랜덤 결과</strong><button type="button" class="btn" aria-label="랜덤 결과 다시 뽑기">다시 뽑기</button></div><div class="note">Quick Random 또는 랜덤 추천이 활성일 때만 노출. 두 진입점의 의미는 합치지 않음.</div></div>
+          <div class="card reserved"><div class="row"><strong>Voice & Reaction</strong><span class="badge">RESERVED</span></div><div class="small">텍스트 모드 · 펼침 자리: Voice/TTS · Reaction · Mic/STT</div><div class="note">과거 Voice 선호/시대별·세션별 의미는 향후 구조의 migration source로 보존. Voice 실패 시 텍스트 대화 유지.</div></div>
+          <!-- P-06 VOICE PRESERVATION PATCH START · mobile -->
+          <div class="card reserved" data-p06-voice-preservation="mobile">
+            <div class="row"><strong>Voice High-Fidelity Architecture</strong><span class="badge">P-06 · PRESERVE</span></div>
+            <div class="small">Architecture / Semantics Preservation only · 실제 Voice/TTS/Reaction/Mic-STT runtime은 후속 단계</div>
+            <div class="expanded-title">Existing Voice Semantics · 서로 독립 보존</div>
+            <div class="setting-grid">
+              <div class="setting"><b>current voice</b><span>현재 해석된 기본/적용 voice 상태의 의미 좌표. recommendation이나 fixed voice와 동일시하지 않는다.</span></div>
+              <div class="setting"><b>recommendation</b><span>미래 추천 후보/권고 의미. 적용된 fixed voice와 구분하며 이 단계에서 추천 엔진은 만들지 않는다.</span></div>
+              <div class="setting"><b>fixed voice</b><span>사용자가 고정한 voice 선택의 의미 좌표. auto recommendation이 임의로 덮어쓰는 runtime은 허용하지 않는다.</span></div>
+              <div class="setting"><b>era mapping</b><span>시대 상태를 Voice 단일 선택이 아니라 Persona/Voice/Prosody/Timing/Reaction 묶음으로 연결할 미래 좌표.</span></div>
+              <div class="setting"><b>session-only override</b><span>현재 세션에만 적용되는 일시 override. persistent/default state와 분리하며 영구 저장으로 간주하지 않는다.</span></div>
+              <div class="setting"><b>auto recommendation</b><span>미래 자동 추천의 별도 의미 좌표. fixed voice 또는 session-only override와 혼합하지 않는다.</span></div>
+            </div>
+            <div class="expanded-title">High-Fidelity Engine · 정적 보존 계약</div>
+            <div class="setting-grid">
+              <div class="setting"><b>Persona Fingerprint</b><span>lexical fingerprint · cushion language · endings · reaction pattern · conversation rhythm · contextual behavior.</span></div>
+              <div class="setting"><b>Voice Profile</b><span>base voice · voice choice · rate · pitch · energy · pause tendency의 미래 조정 좌표.</span></div>
+              <div class="setting"><b>Prosody Profile</b><span>문장 리듬과 억양/강세/속도 뉘앙스를 Voice와 분리해 보존하고 향후 calibration 대상으로 둔다.</span></div>
+              <div class="setting"><b>Timing Engine</b><span>pause · breath · hesitation · emphasis · rhythm · segmentation · future segment scheduler. P-06에서 실제 milliseconds는 고정하지 않는다.</span></div>
+              <div class="setting"><b>Reaction Director</b><span>laughter · cheer · cushion · reaction type · intensity · context · multi-slot · weighted variation · cooldown. 단순 uniform random으로 축소하지 않는다.</span></div>
+              <div class="setting"><b>Audio Mapping</b><span>semantic reaction/timing event → 프로젝트 상대 경로 audio/... reaction asset → 미래 HTML Audio / Web Audio playback runtime.</span></div>
+              <div class="setting"><b>Hybrid Voice</b><span>Persona/Text + Synthetic Voice + Authentic Reaction Layer의 결합으로 전체 체감 fidelity를 높이는 구조.</span></div>
+              <div class="setting"><b>Era Bundle</b><span>Persona + Voice + Prosody + Timing + Reaction을 하나의 시대 상태로 연결할 미래 bundle.</span></div>
+              <div class="setting"><b>Session State</b><span>session-only override와 persistent/default state를 분리하고 세션 경계를 넘는 암묵적 mutation을 금지.</span></div>
+              <div class="setting"><b>Language Learning</b><span>High-Fidelity immersion은 일본어 학습 대화의 지속성과 즐거움을 높이는 보조 계층이며 학습 흐름 자체를 막지 않는다.</span></div>
+              <div class="setting"><b>Fallback</b><span>TTS 또는 Reaction Audio 실패 시 Graceful Degradation / Fail-safe Text Fallback으로 Persona/Text 기반 언어 학습 대화를 계속한다.</span></div>
+              <div class="setting"><b>Sync Evaluation</b><span>Persona fidelity · lexical fidelity · reaction fidelity · conversation rhythm · voice nuance · prosody · timing · overall immersion · regression을 검증한다.</span></div>
+              <div class="setting"><b>Future Runtime Boundary</b><span>marker/semantic-event parser · SpeechSynthesis · Audio()/Web Audio graph · scheduler · cooldown · weighted selection · playback coordination · microphone/STT · DB migration은 P-06 범위 밖.</span></div>
+            </div>
+            <div class="note">P-06은 의미와 미래 runtime 좌표만 정적으로 보존한다. 기존 Voice RESERVED와 Start 조작 authority는 변경하지 않는다.</div>
+          </div>
+          <!-- P-06 VOICE PRESERVATION PATCH END · mobile -->
+
+          <div class="card"><div class="row"><strong>세부 설정</strong><span class="badge">EXPANDED REVIEW</span></div><div class="note">실제 모바일 기본 상태는 접힘. 아래 내용은 기능 누락 검수를 위해 펼친 상태를 동시에 표시한 것.</div>
+            <div class="expanded-title">대화 축 · 모두 독립 유지</div>
+            <div class="setting-grid">
+              <div class="setting"><b>시대 Era</b><span>현재 · 10대 후반 · 20대 초/후 · 30대 초 · 연도 지정</span></div><div class="setting" data-p02-year-timeslip="mobile"><b>타임슬립 연도</b><span>‘연도 지정’ 선택 시만 표시 · <input id="p02-mobile-year-timeslip" type="number" inputmode="numeric" step="1" placeholder="예: 2015" aria-label="타임슬립 연도 지정"> 년</span></div>
+              <div class="setting"><b>상황 Scene</b><span>일상 · 말동무 · 전화 · 데이트 · 술자리 · 라디오 · 산책/Vlog · 타임슬립 · 여행 · 늦은 밤</span></div>
+              <div class="setting"><b>활동 Activity</b><span>자유 대화 · 그냥 들어줘 · 같이 생각 · 일본어 공부 · 실전 연습 · 같이 보기/읽기 · 하루 돌아보기 · 랜덤 추천</span></div>
+              <div class="setting"><b>관계 Relationship</b><span>처음 · 익숙함 · 친한 사이 · 오래된 사이</span></div>
+              <div class="setting"><b>상태 State</b><span>평상시 · 장난기 · 텐션 높음 · 피곤 · 아픔 · 음주/취기 단계 · 술 후 졸림</span></div>
+              <div class="setting"><b>대화 언어</b><span>일본어 몰입 · JP/KR 자연 혼합 · 한국어 도움 · 한국어 말동무</span></div>
+              <div class="setting"><b>도움 방식</b><span>그냥 들어줘 · 공감 · 의견 · 해결책 · 반박/도전</span></div>
+              <div class="setting"><b>대화 주도</b><span>내가 주도 · 균형 · 캐릭터 주도</span></div>
+            </div>
+            <div class="expanded-title">일본어 · 현재 수준과 이번 세션 난이도 분리</div>
+            <div class="levelrow">
+              <div class="levelbox"><strong>현재 일본어 수준</strong><div>자동 적응 / N5 / N4 / N3 / N2 / N1 / N1+ 확장 가능</div></div>
+              <div class="levelbox"><strong>이번 대화 난이도</strong><div>편안하게 / 현재 수준 / 한 단계 도전 / Advanced 자유 지정</div></div>
+            </div>
+            <div class="setting-grid">
+              <div class="setting"><b>학습 모드</b><span>자유 대화 · 가볍게 학습 · 공부 중심 · 쉐도잉</span></div>
+              <div class="setting"><b>몰입</b><span>자연스럽게 · Deep · Study-first</span></div>
+              <div class="setting"><b>학습 프로필</b><span>듣기 · 말하기 · 문법 · 어휘 · 자연 회화 상태를 장기 성장 데이터로 유지</span></div>
+              <div class="setting"><b>Advanced</b><span>difficulty_override · latent legacy Scene · named preset migration</span></div>
+            </div>
+            <div class="note dangerline">10대 후반 + 술자리/음주·취함 상태는 기존 안전 차단을 유지.</div>
+          </div>
+
+          <div class="card tight"><div class="row"><strong>Private Session</strong><span class="badge">OFF · 단일 authority</span></div><div class="note">Start에서 항상 접근. 자동 장기기억/관계 progression/학습 캘린더 auto-write/STT draft persistence 차단.</div></div>
+          <div class="buttons"><div class="btn">직전 설정 복원</div><div class="btn">기본값으로 복귀</div></div>
+          <div class="buttons"><div class="btn primary">설정 복사</div><div class="btn">ChatGPT 열기</div><div class="btn full">생성된 세션 명령 미리보기</div></div>
+          <div class="note">Clipboard 실패 시 선택 가능한 textarea/manual copy fallback. ‘미리보기’는 오류 때만 나타나는 fallback과 별개로 상시 접근 가능.</div>
+        </section>
+
+        <section class="section learn">
+          <div class="section-head"><h2>② 학습</h2><span class="small">Learning Hub</span></div>
+          <div class="btn blue full">＋ 학습 기록 추가</div>
+          <div class="note">구조화 Capture → paste → validate → Preview/edit → 명시 저장. 구조화 정리를 못 받으면 같은 surface에서 일반 학습 노트 fallback.</div>
+          <div class="card reserved"><div class="row"><strong>학습 캘린더</strong><span class="badge">RESERVED</span></div><div class="small">월간 출석 · 날짜별 학습 노트 · 복습</div><div class="btn disabled full" style="margin-top:7px">미래 ‘오늘 출석하기’ CTA 자리</div><div class="note">노트 저장 = 자동 출석 아님 · Private auto-write 금지.</div></div>
+          <div class="card"><div class="row"><strong>오늘의 일본어 공부</strong><span class="small">설정 〉</span></div><div class="small">현재 수준 N5 · 세션: 현재 수준 · Light · 자연 혼합</div><div class="note">향후 N4→N3→N2→N1로 올라가도 동일 구조 사용.</div></div>
+          <div class="card reserved"><div class="row"><strong>Practice / Quiz</strong><span class="badge">RESERVED</span></div><div class="small">한자→뜻 · 한자→읽기 · audio→뜻 · 음성 읽기</div><div class="note">엔진은 DEFERRED. Learning Item 기반 local deterministic baseline 자리만 확보.</div></div>
+          <div class="card tight tap-target"><div class="row"><strong>이번 주 / 최근 복습</strong><span>〉</span></div></div>
+          <div class="card"><div class="row"><strong>Learning Journal</strong><span class="small">최근 · 전체 · 검색 〉</span></div><div class="small">날짜/텍스트 검색 · 수정 · 삭제 · 참조 무결성</div><div class="divider"></div><div class="row"><strong>내보내기</strong><span class="small">MD · TXT 〉</span></div><div class="note">파일/share 실패 시 생성된 텍스트를 selectable read-only surface로 제공.</div></div>
+        </section>
+
+        <section class="section memory">
+          <div class="section-head"><h2>③ 기억</h2><span class="small">Canonical + Legacy continuity</span></div>
+          <div class="card"><div class="row"><strong>장기 기억 컨트롤러</strong><span class="badge">CANONICAL</span></div><div class="card tight softblue"><strong>Lifecycle · 제목 바로 아래</strong><div class="small">마지막 성공 저장 · 다음 권장일 · 경과일 · 새 채팅 권장 · Backup generated/verified</div></div><div class="chips"><span class="chip">초기화/활성화</span><span class="chip">Session Update</span><span class="chip">이번엔 미루기</span><span class="chip">새 채팅 시작 확인</span></div></div>
+          <div class="card"><strong>Memory handoff + Correction Sandbox</strong><div class="small">이전 기록 검사/활성화 · 기억 포함 프롬프트 복사 · 기억 정리 요청 복사 · 응답 붙여넣기</div><div class="note">manual transport fallback → 검사 → editable correction → validation failure 시 입력 유지 → Preview → 명시 승인 → atomic commit → stale candidate 차단.</div></div>
+          <div class="card tight"><div class="row"><strong>이번 Memory 저장의 Sensitive 허용</strong><span class="badge">OFF</span></div><div class="note">Legacy Continuity / Backup Sensitive와 서로 다른 control.</div></div>
+        </section>
+
+        <section class="section manage">
+          <div class="section-head"><h2>④ 관리</h2><span class="small">안전 · 저빈도</span></div>
+          <div class="card"><strong>Data Safety</strong><div class="chips"><span class="chip">Standard Recovery Backup</span><span class="chip">Restore 검사/Preview</span><span class="chip">Raw Recovery</span><span class="chip">Forward Rollback</span><span class="chip">Replica Transfer/Conflict</span></div><div class="card tight softblue" style="margin-top:8px"><div class="row"><strong>Recovery Backup Sensitive 포함 허용</strong><span class="badge">OFF</span></div><div class="note">Memory Sensitive / Legacy Continuity Sensitive와 독립된 control.</div></div><div class="note">Legacy controller 설정 backup과 Canonical Recovery Backup을 구분.</div></div>
+          <!-- P-04-1 RESTORE PATH PATCH START · mobile -->
+          <div class="card" data-p04-1-restore="mobile" data-restore-entry="manage/data-safety/restore" data-restore-source="standard-recovery-backup" data-restore-commit-model="staging-forward-revision-readback" data-restore-failure="fail-closed-preserve-verified-canonical" data-controller-settings-import="separate-authority" data-remote-notice-authority="advisory-only">
+            <div class="row"><strong>Restore · Standard Recovery Backup</strong><span class="badge">P-04-1</span></div>
+            <div class="note">이 경로는 [관리] → [Data Safety] → [Restore]에서만 Canonical Recovery 복원을 다룬다. Controller Settings 가져오기와 합치지 않는다.</div>
+            <div class="divider"></div>
+            <div class="expanded-title">1 · Standard Recovery Backup 파일 선택</div>
+            <div class="setting"><b>복원 파일</b><span><input id="p04-mobile-restore-file" type="file" accept=".json,application/json" aria-label="Standard Recovery Backup 파일 선택"> · 파일을 고른 것만으로는 canonical state를 변경하지 않음</span></div>
+            <div class="expanded-title">2 · 규격 · 무결성 · schema/version 검사</div>
+            <div class="small">backup_format_version · JSON/format · integrity hashes · source schema/runtime · Persona dependency/version/hash · supported migration adapter chain을 로컬에서 검사. future/unsupported schema 또는 adapter 부재는 자동 적용하지 않고 FAIL CLOSED.</div>
+            <div class="expanded-title">3 · Restore Preview</div>
+            <div class="card tight softblue" data-p04-1-restore-preview="mobile" data-preview-before-mutation="required">
+              <div class="row"><strong>복원될 내용 미리보기</strong><span class="badge">검사 후 표시</span></div>
+              <div class="setting-grid">
+                <div class="setting"><b>백업 생성일</b><span>created_at · 파일 검사 후 표시</span></div>
+                <div class="setting"><b>버전 / 출처</b><span>backup format · source schema/runtime</span></div>
+                <div class="setting"><b>포함 범위</b><span>backup이 선언한 Canonical USER_STATE 및 승인된 portable state 범위</span></div>
+                <div class="setting"><b>무결성 / 의존성</b><span>integrity hashes · Persona dependency/hash · migration compatibility</span></div>
+                <div class="setting"><b>현재 상태</b><span>기존 verified canonical HEAD는 성공 검증 전까지 그대로 보존</span></div>
+                <div class="setting"><b>적용 방식</b><span>과거 HEAD로 이동하지 않고 staging에서 새 forward revision 후보 생성</span></div>
+              </div>
+            </div>
+            <div class="expanded-title">4 · 사용자 명시 승인</div>
+            <div class="buttons"><button type="button" class="btn">선택한 백업 검사</button><button type="button" class="btn primary disabled" aria-disabled="true">Preview 확인 후 복원 승인</button></div>
+            <div class="note">검사 PASS + Preview 노출 전에는 승인 단계로 진행하지 않는다. 승인 클릭 전 canonical mutation 금지.</div>
+            <div class="expanded-title">5 · Staging → 새 forward revision 후보</div>
+            <div class="small">승인 후에도 기존 verified canonical 상태를 유지한 채 transaction/staging 영역에서 복원 payload를 새 revision 후보로 구성한다. 기존 HEAD를 단순 overwrite하거나 뒤로 이동시키지 않으며 partial apply를 허용하지 않는다.</div>
+            <div class="expanded-title">6 · Read-back verification → 성공 시에만 확정</div>
+            <div class="small">staged candidate를 다시 읽어 구조·해시·scope를 검증하고 모든 검사가 성공한 경우에만 새 canonical revision으로 확정한다.</div>
+            <div class="note dangerline"><strong>FAIL CLOSED</strong> · 파싱/무결성/schema/version/migration/read-back 중 하나라도 실패하면 새 후보를 확정하지 않는다. 기존 verified canonical state는 100% 유지하고 읽을 수 있는 Recovery / Raw Recovery Export 경로를 계속 보존한다.</div>
+            <div class="note">Remote notice/update는 안내만 할 수 있고 Restore mutation authority가 아니다. 로컬 결정적 검증 + 사용자 명시 승인이 복원 적용의 필수 gate다.</div>
+          </div>
+          <!-- P-04-1 RESTORE PATH PATCH END · mobile -->
+          <!-- P-04-2 FORWARD ROLLBACK PATCH START · mobile -->
+          <div class="card" data-p04-2-forward-rollback="mobile" data-rollback-entry="manage/data-safety/forward-rollback" data-rollback-target-authority="revision-id" data-rollback-commit-model="copy-target-state-new-forward-revision-readback" data-rollback-head-policy="no-rewind-no-overwrite" data-rollback-failure="fail-closed-preserve-verified-head" data-p04-3-replica-conflict="out-of-scope">
+            <div class="row"><strong>Forward Rollback · 과거 상태를 새 revision으로 복구</strong><span class="badge">P-04-2</span></div>
+            <div class="note">단일 경로: [관리] → [Data Safety] → [Forward Rollback]. 과거 revision의 상태를 source로 사용할 뿐 현재 HEAD를 과거로 이동시키지 않는다. Replica Transfer/Conflict는 P-04-3 범위이므로 여기서 처리하지 않는다.</div>
+            <div class="divider"></div>
+            <div class="expanded-title">1 · 복구 대상 revision 선택</div>
+            <div class="setting"><b>Rollback target</b><span><select id="p04-mobile-rollback-target" aria-label="Forward Rollback 대상 revision 선택"><option value="">검증된 과거 revision 선택</option><option value="example-rev94">예시 · rev94 · 2026-08-10 · verified</option></select> · 날짜는 식별 보조 정보이며 실제 authority는 revision_id</span></div>
+            <div class="expanded-title">2 · 대상 revision 검사</div>
+            <div class="small">선택한 revision_id가 존재하고 읽을 수 있으며 verified history에 속하는지, 필요한 snapshot/lineage metadata를 안전하게 재구성할 수 있는지 검사한다. 검사 실패만으로 현재 canonical state를 변경하지 않는다.</div>
+            <div class="expanded-title">3 · Forward Rollback Preview</div>
+            <div class="card tight softblue" data-p04-2-rollback-preview="mobile" data-preview-before-mutation="required">
+              <div class="row"><strong>롤백 후 변화 미리보기</strong><span class="badge">검사 후 표시</span></div>
+              <div class="setting-grid">
+                <div class="setting"><b>현재 verified HEAD</b><span>현재 revision_id · 성공 검증 전까지 authority 유지</span></div>
+                <div class="setting"><b>선택한 대상</b><span>rollback_target revision_id · 생성 시각은 보조 표시</span></div>
+                <div class="setting"><b>변경될 상태</b><span>현재 HEAD와 선택 대상 간 Canonical USER_STATE / 승인된 portable state 차이</span></div>
+                <div class="setting"><b>새 revision 계획</b><span>과거 revision payload를 source로 새 forward revision candidate 생성</span></div>
+                <div class="setting"><b>Lineage</b><span>parent = 현재 verified HEAD · rollback_target = 선택한 과거 revision</span></div>
+                <div class="setting"><b>금지 동작</b><span>HEAD rewind · 기존 revision overwrite · revision 번호만으로 자동 선택 · partial apply</span></div>
+              </div>
+            </div>
+            <div class="expanded-title">4 · 사용자 명시 승인</div>
+            <div class="buttons"><button type="button" class="btn">선택한 revision 검사</button><button type="button" class="btn primary disabled" aria-disabled="true">Preview 확인 후 Forward Rollback 실행</button></div>
+            <div class="note">검사 PASS와 Preview 확인 전에는 실행 버튼을 활성화하지 않는다. 사용자의 명시 승인 없이 canonical mutation 금지.</div>
+            <div class="expanded-title">5 · 새 forward revision candidate 생성</div>
+            <div class="small">현재 verified HEAD/state를 그대로 보존한 staging/transaction에서 선택한 과거 상태를 복사해 새 revision 후보를 만든다. 새 후보는 현재 HEAD의 다음 계보에 추가되며 rollback_target 및 lineage metadata를 보존한다.</div>
+            <div class="expanded-title">6 · Read-back verification → 성공 시에만 새 HEAD 확정</div>
+            <div class="small">새 candidate를 다시 읽어 payload · metadata · lineage · rollback_target · expected scope를 검증하고 모두 일치할 때만 해당 새 revision을 canonical HEAD로 확정한다.</div>
+            <div class="note dangerline"><strong>FAIL CLOSED</strong> · 대상 읽기/Preview/staging/metadata/read-back 중 하나라도 실패하면 새 revision을 확정하지 않는다. 기존 verified HEAD와 canonical state는 100% 유지한다.</div>
+            <div class="note">P-04-2는 과거 상태를 복사해 앞으로 새 revision을 만드는 경로다. Conflict 판단·자동 merge·incoming replica 선택은 하지 않는다.</div>
+          </div>
+          <!-- P-04-2 FORWARD ROLLBACK PATCH END · mobile -->
+          <!-- P-04-3 REPLICA CONFLICT PATCH START · mobile -->
+          <div class="card" data-p04-3-replica-conflict="mobile" data-conflict-entry="manage/data-safety/conflict" data-conflict-replica-identity="storage-container-replica-id" data-conflict-auto-overwrite="forbidden" data-conflict-auto-merge="forbidden" data-conflict-commit-model="explicit-branch-new-forward-revision-readback" data-conflict-failure="fail-closed-preserve-verified-head">
+            <div class="row"><strong>Replica Conflict · 충돌 분기 직접 선택</strong><span class="badge">P-04-3</span></div>
+            <div class="note">단일 경로: [관리] → [Data Safety] → [Conflict]. 서로 다른 저장 컨테이너의 lineage가 갈라진 CONFLICT만 다룬다. iPhone/Android는 예시이며 replica_id는 물리 기기가 아니라 저장 컨테이너 식별자다.</div>
+            <div class="divider"></div>
+            <div class="expanded-title">1 · CONFLICT 감지 · 자동 overwrite 차단</div>
+            <div class="small">Current Local과 Incoming Replica의 lineage / HEAD / replica_id가 일치하지 않으면 충돌 상태로 분류한다. 최신 날짜, 더 큰 revision 번호, 더 새로 보이는 기기라는 이유만으로 어느 쪽도 자동 선택·overwrite하지 않는다.</div>
+            <div class="expanded-title">2 · Conflict Preview</div>
+            <div class="card tight softblue" data-p04-3-conflict-preview="mobile" data-preview-before-mutation="required">
+              <div class="row"><strong>두 분기 비교</strong><span class="badge">CONFLICT</span></div>
+              <div class="setting-grid">
+                <div class="setting"><b>Current Local</b><span>현재 verified HEAD · local replica_id · lineage 요약 · 성공 검증 전 authority 유지</span></div>
+                <div class="setting"><b>Incoming Replica</b><span>incoming HEAD · source replica_id · lineage 요약 · 가져온 시각은 보조 정보</span></div>
+                <div class="setting"><b>차이</b><span>Canonical USER_STATE / 승인된 portable state의 충돌 범위를 비교 표시</span></div>
+                <div class="setting"><b>자동 판단 금지</b><span>timestamp 우선 · revision 숫자 우선 · silent overwrite · unsafe automatic merge 금지</span></div>
+              </div>
+            </div>
+            <div class="expanded-title">3 · 사용자가 보존할 분기 명시 선택</div>
+            <div class="setting-grid">
+              <label class="setting"><b>Current Local 유지</b><span><input id="p04-mobile-conflict-local" name="p04-mobile-conflict-choice" type="radio" value="current-local"> 현재 local payload를 source로 resolution revision 생성</span></label>
+              <label class="setting"><b>Incoming Replica 선택</b><span><input id="p04-mobile-conflict-incoming" name="p04-mobile-conflict-choice" type="radio" value="incoming-replica"> incoming payload를 source로 resolution revision 생성</span></label>
+            </div>
+            <div class="expanded-title">4 · Preview 확인 후 명시 승인</div>
+            <div class="buttons"><button type="button" class="btn">Conflict 다시 검사</button><button type="button" class="btn primary disabled" aria-disabled="true">선택한 분기로 Conflict 해결 승인</button></div>
+            <div class="note">Conflict Preview와 분기 선택이 완료되기 전에는 승인하지 않는다. 사용자 명시 승인 전 canonical mutation 금지.</div>
+            <div class="expanded-title">5 · 선택 분기를 source로 새 forward revision candidate 생성</div>
+            <div class="small">기존 verified HEAD/state를 보존한 staging/transaction에서 선택한 분기의 payload를 복사해 새 resolution revision 후보를 만든다. parent=현재 verified HEAD를 유지하고 conflict_id · selected_branch · local_head · incoming_head · source_replica_id 등 충돌 provenance를 보존한다. 기존 revision을 overwrite하거나 HEAD를 다른 lineage로 직접 이동시키지 않는다.</div>
+            <div class="expanded-title">6 · Read-back verification → 성공 시에만 새 HEAD 확정</div>
+            <div class="small">candidate를 다시 읽어 payload · conflict metadata · lineage · selected branch · expected scope를 검증한다. 모두 일치할 때만 새 forward revision을 canonical HEAD로 확정한다.</div>
+            <div class="note dangerline"><strong>FAIL CLOSED</strong> · conflict 검사/Preview/선택/staging/metadata/read-back 중 하나라도 실패하면 resolution revision을 확정하지 않는다. 기존 verified HEAD와 canonical state는 100% 유지하고 Recovery/Export 접근을 보존한다.</div>
+            <div class="note">이 경로는 명시적 2분기 선택만 다룬다. silent latest-wins와 unsafe automatic merge는 사용하지 않는다.</div>
+          </div>
+          <!-- P-04-3 REPLICA CONFLICT PATCH END · mobile -->
+          <div class="card"><strong>Legacy Continuity / Migration</strong><div class="small">현재 기록 · count/status · 정리 요청 · 이전 기록 복원 · JSON 검사/Preview/Apply · Legacy Sensitive · 삭제</div><div class="note">Canonical이 있다고 자동 삭제하지 않음. named saved presets와 과거 데이터도 migration source로 유지.</div></div>
+          <div class="card" data-p03-controller-settings="mobile"><div class="row"><strong>컨트롤러 설정</strong><span class="small">Legacy settings bundle</span></div><div class="buttons"><button type="button" class="btn">컨트롤러 설정 내보내기</button><button type="button" class="btn">컨트롤러 설정 가져오기</button></div><div class="note">Canonical Recovery Backup과 별도 경로. 기존 컨트롤러 설정/즐겨찾기 계열의 설정 bundle을 위한 사용자 진입점.</div></div>
+          <div class="card tight softblue" data-p03a-import-safety="mobile"><strong>가져오기 안전 절차 · 구현 필수</strong><div class="small">파일 선택 → JSON 파싱 + schema/format/version 검증 → 백업 생성일·버전·포함 범위 Preview → 사용자 명시 승인 → 기존 상태를 보존한 staging/transaction 적용 → read-back verification → 검증 성공 시에만 확정</div><div class="note">실패·미지원 버전·검증 불일치 시 적용 중단. 기존 verified controller settings는 삭제·훼손하지 않고 그대로 유지. Controller Settings 범위만 대상이며 Canonical USER_STATE / Learning / Memory / Recovery를 덮어쓰지 않음.</div></div>
+          <!-- P-05 ADVANCED RESERVED ROUTES PATCH START · mobile -->
+          <div class="card reserved" data-p05-advanced-reserved="mobile" data-p05-route="manage/advanced" data-p05-mutation-authority="none" data-p05-failure="fail-closed-preserve-verified-state">
+            <div class="row"><strong>Advanced · RESERVED</strong><span class="badge">P-05</span></div>
+            <div class="note">단일 경로: [관리] → [Advanced]. 미래 기능의 진입점과 namespace boundary만 예약한다. 이 route 자체에는 USER_STATE / PERSONA mutation authority가 없으며 cross-namespace direct write를 허용하지 않는다.</div>
+            <div class="setting-grid">
+              <div class="setting" data-p05-appearance="deferred-preserve"><b>Appearance / 화면 꾸미기</b><span>[DEFERRED-PRESERVE] · 실제 theme engine과 persistent style mutation은 구현하지 않는다. 향후 자체 feature namespace / capability / migration ownership 경계에서만 확장한다.</span></div>
+              <div class="setting" data-p05-data-portability="deferred-preserve"><b>Data Portability / 선택적 Export·Reset</b><span>[DEFERRED-PRESERVE] · 실제 Export engine, Reset, 삭제, 초기화는 구현하지 않는다. 향후 Preview · warning · explicit user approval boundary 자리만 예약한다.</span></div>
+            </div>
+            <div class="note dangerline"><strong>FAIL CLOSED</strong> · capability / schema / migration adapter가 확인되지 않거나 unsupported/future version이면 현재 verified state와 사용자 데이터 원본을 그대로 유지한다. 부분 적용 · silent fallback mutation · destructive operation을 하지 않는다.</div>
+          </div>
+          <!-- P-05 ADVANCED RESERVED ROUTES PATCH END · mobile -->
+          <div class="card"><strong>시스템 / Capability 상태</strong><div class="small">Persona · manual copy/paste · Project 보조 · Memory 보조 · Voice/브라우저 지원 · online/offline · storage</div><div class="note">Free/Plus/Pro 같은 plan-name branching 금지.</div></div>
+          <div class="card tight" data-p03-indexeddb-diagnostic="mobile"><div class="row"><strong>Storage / IndexedDB 진단</strong><button type="button" class="btn">실기기 IndexedDB 진단 열기</button></div><div class="note">실기기 저장소 상태 확인용. 진단 화면을 여는 것 자체가 저장 성공을 의미하지 않음.</div></div>
+          <div class="card tight tap-target"><div class="row"><strong>화면 언어</strong><span class="small">Auto · 한국어 · 日本語 · English</span></div></div>
+          <div class="card tight tap-target"><div class="row"><strong>초기 안내 / HTTPS·로컬 / 업데이트</strong><span>〉</span></div></div>
+          <div class="card danger"><strong>PURGE · 파괴적 작업</strong><div class="small">sanitized NEW ROOT · purge_epoch 증가 · old-backup 경고 · acknowledgement · Preview</div><div class="note">일반 컨트롤과 물리 분리. Recovery 기반 이후에만 구현.</div></div>
+        </section>
+      </div></div>
+      <div class="caption">모바일은 기능을 줄이지 않고 저빈도 항목을 펼침/secondary surface로 밀어낸다. 주요 action/anchor는 최소 48px 후보.</div>
+    </section>
+
+    <section>
+      <div class="panel-title">데스크톱 · 모바일과 동일 기능 집합 · 더 높은 정보 밀도</div>
+      <div class="desktop">
+        <div class="desktop-head"><div><div class="brand">INOO</div><div class="days">함께한 지 <span class="day-count">252일</span><span class="day-sparkle" aria-hidden="true"><i></i></span><span>· 화면 언어 Auto</span></div></div><div class="small">저장 상태 정상 · degraded 시 전역 배너</div></div>
+        <div class="desktop-body">
+          <aside class="rail"><div class="anchor"><span class="ico"></span>시작</div><div class="anchor"><span class="ico"></span>학습</div><div class="anchor"><span class="ico"></span>기억</div><div class="anchor"><span class="ico"></span>관리</div></aside>
+          <main class="canvas">
+            <div class="card tight softblue span2" data-p01b-alert-hub="desktop" data-alert-routes="learning-capture memory-update new-chat recovery-backup update"><div class="row"><strong>알림 · 이번 주 기억을 정리할 때예요</strong><span class="badge">+3 〉</span></div><div class="small">7일 경과 · 클릭하면 해당 기능으로 바로 이동 · 필요한 알림 1건만 우선 표시</div></div>
+            <section class="section start">
+              <div class="section-head"><h2>① 시작</h2><span class="small">모바일과 기능 동일</span></div>
+              <div class="card"><div class="row"><strong>빠른 시작</strong><span class="small">기본 9 · 상황별 4</span></div><div class="expanded-title">기본</div><div class="quick-grid"><span class="quick-choice selected">수다</span><span class="quick-choice">전화</span><span class="quick-choice">데이트</span><span class="quick-choice">술자리</span><span class="quick-choice">라디오</span><span class="quick-choice">산책</span><span class="quick-choice">타임슬립</span><span class="quick-choice study">일본어 공부</span><span class="quick-choice random">랜덤</span></div><div class="divider"></div><div class="expanded-title">상황별 바로가기</div><div class="preset-grid"><span class="preset-choice warm">밤전화</span><span class="preset-choice pink">오늘 좀 들어줘</span><span class="preset-choice warm">한잔하자</span><span class="preset-choice legacy">랜덤 추천</span></div></div>
+              <div class="card tight"><div class="row"><strong>즐겨찾기</strong><span class="small">동적 + 과거 shortcut 접근</span></div></div>
+              <div class="card tight"><strong>NOW PLAYING</strong><div class="small">현재 조합 · 랜덤 결과 · Study Capture shortcut</div></div><div class="card tight" data-p02-random-reroll="desktop"><div class="row"><strong>랜덤 결과</strong><button type="button" class="btn" aria-label="랜덤 결과 다시 뽑기">다시 뽑기</button></div><div class="note">Quick Random / random_recommend 활성 결과에서만 노출.</div></div>
+              <div class="card reserved"><strong>Voice & Reaction · RESERVED</strong><div class="small">TTS / Reaction / Mic-STT 확장 · 조작 authority는 Start 한 곳</div></div>
+              <!-- P-06 VOICE PRESERVATION PATCH START · desktop -->
+              <div class="card reserved" data-p06-voice-preservation="desktop">
+                <div class="row"><strong>Voice High-Fidelity Architecture</strong><span class="badge">P-06 · PRESERVE</span></div>
+                <div class="small">Architecture / Semantics Preservation only · 실제 Voice/TTS/Reaction/Mic-STT runtime은 후속 단계</div>
+                <div class="expanded-title">Existing Voice Semantics · 서로 독립 보존</div>
+                <div class="setting-grid">
+                  <div class="setting"><b>current voice</b><span>현재 해석된 기본/적용 voice 상태의 의미 좌표. recommendation이나 fixed voice와 동일시하지 않는다.</span></div>
+                  <div class="setting"><b>recommendation</b><span>미래 추천 후보/권고 의미. 적용된 fixed voice와 구분하며 이 단계에서 추천 엔진은 만들지 않는다.</span></div>
+                  <div class="setting"><b>fixed voice</b><span>사용자가 고정한 voice 선택의 의미 좌표. auto recommendation이 임의로 덮어쓰는 runtime은 허용하지 않는다.</span></div>
+                  <div class="setting"><b>era mapping</b><span>시대 상태를 Voice 단일 선택이 아니라 Persona/Voice/Prosody/Timing/Reaction 묶음으로 연결할 미래 좌표.</span></div>
+                  <div class="setting"><b>session-only override</b><span>현재 세션에만 적용되는 일시 override. persistent/default state와 분리하며 영구 저장으로 간주하지 않는다.</span></div>
+                  <div class="setting"><b>auto recommendation</b><span>미래 자동 추천의 별도 의미 좌표. fixed voice 또는 session-only override와 혼합하지 않는다.</span></div>
+                </div>
+                <div class="expanded-title">High-Fidelity Engine · 정적 보존 계약</div>
+                <div class="setting-grid">
+                  <div class="setting"><b>Persona Fingerprint</b><span>lexical fingerprint · cushion language · endings · reaction pattern · conversation rhythm · contextual behavior.</span></div>
+                  <div class="setting"><b>Voice Profile</b><span>base voice · voice choice · rate · pitch · energy · pause tendency의 미래 조정 좌표.</span></div>
+                  <div class="setting"><b>Prosody Profile</b><span>문장 리듬과 억양/강세/속도 뉘앙스를 Voice와 분리해 보존하고 향후 calibration 대상으로 둔다.</span></div>
+                  <div class="setting"><b>Timing Engine</b><span>pause · breath · hesitation · emphasis · rhythm · segmentation · future segment scheduler. P-06에서 실제 milliseconds는 고정하지 않는다.</span></div>
+                  <div class="setting"><b>Reaction Director</b><span>laughter · cheer · cushion · reaction type · intensity · context · multi-slot · weighted variation · cooldown. 단순 uniform random으로 축소하지 않는다.</span></div>
+                  <div class="setting"><b>Audio Mapping</b><span>semantic reaction/timing event → 프로젝트 상대 경로 audio/... reaction asset → 미래 HTML Audio / Web Audio playback runtime.</span></div>
+                  <div class="setting"><b>Hybrid Voice</b><span>Persona/Text + Synthetic Voice + Authentic Reaction Layer의 결합으로 전체 체감 fidelity를 높이는 구조.</span></div>
+                  <div class="setting"><b>Era Bundle</b><span>Persona + Voice + Prosody + Timing + Reaction을 하나의 시대 상태로 연결할 미래 bundle.</span></div>
+                  <div class="setting"><b>Session State</b><span>session-only override와 persistent/default state를 분리하고 세션 경계를 넘는 암묵적 mutation을 금지.</span></div>
+                  <div class="setting"><b>Language Learning</b><span>High-Fidelity immersion은 일본어 학습 대화의 지속성과 즐거움을 높이는 보조 계층이며 학습 흐름 자체를 막지 않는다.</span></div>
+                  <div class="setting"><b>Fallback</b><span>TTS 또는 Reaction Audio 실패 시 Graceful Degradation / Fail-safe Text Fallback으로 Persona/Text 기반 언어 학습 대화를 계속한다.</span></div>
+                  <div class="setting"><b>Sync Evaluation</b><span>Persona fidelity · lexical fidelity · reaction fidelity · conversation rhythm · voice nuance · prosody · timing · overall immersion · regression을 검증한다.</span></div>
+                  <div class="setting"><b>Future Runtime Boundary</b><span>marker/semantic-event parser · SpeechSynthesis · Audio()/Web Audio graph · scheduler · cooldown · weighted selection · playback coordination · microphone/STT · DB migration은 P-06 범위 밖.</span></div>
+                </div>
+                <div class="note">P-06은 의미와 미래 runtime 좌표만 정적으로 보존한다. 기존 Voice RESERVED와 Start 조작 authority는 변경하지 않는다.</div>
+              </div>
+              <!-- P-06 VOICE PRESERVATION PATCH END · desktop -->
+              <div class="buttons"><div class="btn">Private Session</div><div class="btn">직전 설정 복원</div><div class="btn">기본값으로 복귀</div><div class="btn primary">설정 복사</div><div class="btn">ChatGPT 열기</div><div class="btn">세션 명령 미리보기</div></div>
+            </section>
+
+            <section class="section learn">
+              <div class="section-head"><h2>② 학습</h2><span class="small">N5 → N1+ 확장</span></div>
+              <div class="btn blue full">＋ 학습 기록 추가</div><div class="note">구조화 Capture + 일반 학습노트 fallback 동일 surface.</div>
+              <div class="card reserved"><strong>학습 캘린더 · RESERVED</strong><div class="small">월간 출석 · 날짜 연결 · 복습 · 미래 ‘오늘 출석하기’ CTA 실제 자리</div></div>
+              <div class="card"><strong>현재 일본어 수준 / 세션 난이도</strong><div class="small">Auto/N5/N4/N3/N2/N1/N1+ · 편안/현재/도전/Advanced override</div></div>
+              <div class="card reserved"><strong>Practice · RESERVED</strong><div class="small">Vocabulary / Reading / Listening / Speaking</div></div>
+              <div class="card tight"><strong>주간/최근 복습</strong></div>
+              <div class="card"><strong>Journal · Search · Edit · Delete · MD/TXT Export</strong><div class="note">파일 handoff 실패 시 selectable text fallback.</div></div>
+            </section>
+
+            <section class="section start span2">
+              <div class="section-head"><h2>세부 설정 · 데스크톱 펼친 검수</h2><span class="badge">CORE-A/C</span></div>
+              <div class="setting-grid">
+                <div class="setting"><b>Era</b><span>현재 / late_teens / 20s early/late / 30s early / year timeslip</span></div><div class="setting" data-p02-year-timeslip="desktop"><b>Year timeslip</b><span>year timeslip 선택 시만 표시 · <input id="p02-desktop-year-timeslip" type="number" inputmode="numeric" step="1" placeholder="예: 2015" aria-label="타임슬립 연도 지정"> 년</span></div>
+                <div class="setting"><b>Scene</b><span>daily / companion / phone / date / drinking / radio / vlog-walk / timeslip / travel / late-night</span></div>
+                <div class="setting"><b>Activity</b><span>casual / listen-vent / think / study / rehearsal / watch-read / reflection / random-recommend</span></div>
+                <div class="setting"><b>Relationship</b><span>new / familiar / close / long-term</span></div>
+                <div class="setting"><b>State</b><span>normal / playful / high-energy / tired / sick / drinking & intoxication stages / sleepy</span></div>
+                <div class="setting"><b>Language</b><span>JP immersion / mixed / KR assist / KR companion</span></div>
+                <div class="setting"><b>Support</b><span>listen-only / commiserate / opinion / solution / challenge</span></div>
+                <div class="setting"><b>Initiative</b><span>user-led / balanced / character-led</span></div>
+                <div class="setting"><b>Learning mode</b><span>free / light / study / shadowing</span></div>
+                <div class="setting"><b>Immersion</b><span>natural / deep / study-first</span></div>
+                <div class="setting"><b>Japanese growth</b><span>현재 수준 Auto/N5→N1+ + 세션 난이도 독립</span></div>
+                <div class="setting"><b>Advanced/Legacy</b><span>difficulty_override · latent scenes · named preset migration</span></div>
+              </div>
+              <div class="note dangerline">late_teens + drinking/intoxication 차단 규칙 유지. 축 이름이 비슷하다는 이유로 합치지 않음.</div>
+            </section>
+
+            <section class="section memory">
+              <div class="section-head"><h2>③ 기억</h2><span class="small">기존 correction flow 보존</span></div>
+              <div class="card"><strong>Canonical Memory Controller</strong><div class="card tight softblue"><strong>Lifecycle · 제목 바로 아래</strong><div class="small">last success · next recommended · elapsed · new chat · backup state</div></div><div class="small">init/activate · update · postpone · new-chat confirm · prompt handoff</div></div>
+              <div class="card"><strong>Editable Correction Sandbox</strong><div class="small">paste → validate → edit/reinspect → human preview → explicit approve → atomic commit · stale block</div></div>
+              <div class="card tight"><strong>Memory Sensitive opt-in</strong><div class="small">Continuity/Backup Sensitive와 분리</div></div>
+            </section>
+
+            <section class="section manage">
+              <div class="section-head"><h2>④ 관리</h2><span class="small">안전 / migration / global</span></div>
+              <div class="card"><strong>Data Safety</strong><div class="small">Standard Recovery · Restore Preview · Raw Recovery · Forward Rollback · Replica Transfer/Conflict</div><div class="card tight softblue"><strong>Recovery Backup Sensitive opt-in · OFF</strong><div class="small">Memory / Legacy Continuity Sensitive와 독립</div></div></div>
+              <!-- P-04-1 RESTORE PATH PATCH START · desktop -->
+              <div class="card" data-p04-1-restore="desktop" data-restore-entry="manage/data-safety/restore" data-restore-source="standard-recovery-backup" data-restore-commit-model="staging-forward-revision-readback" data-restore-failure="fail-closed-preserve-verified-canonical" data-controller-settings-import="separate-authority" data-remote-notice-authority="advisory-only">
+                <div class="row"><strong>Restore · Standard Recovery Backup</strong><span class="badge">P-04-1</span></div>
+                <div class="note">단일 경로: [관리] → [Data Safety] → [Restore]. Controller Settings Import와 authority/scope를 분리.</div>
+                <div class="setting-grid">
+                  <div class="setting"><b>1 · 파일 선택</b><span><input id="p04-desktop-restore-file" type="file" accept=".json,application/json" aria-label="Standard Recovery Backup 파일 선택"> · 선택만으로 mutation 없음</span></div>
+                  <div class="setting"><b>2 · 검사</b><span>backup_format_version · format · integrity hashes · schema/runtime · Persona dependency/hash · migration adapter chain</span></div>
+                  <div class="setting"><b>3 · Preview</b><span>created_at · version/source · 포함 범위 · 무결성 · 현재 verified HEAD 보존 · 적용 방식 표시</span></div>
+                  <div class="setting"><b>4 · 명시 승인</b><span>검사 PASS + Preview 확인 뒤 사용자가 직접 승인. 승인 전 canonical mutation 금지</span></div>
+                  <div class="setting"><b>5 · Staging</b><span>기존 상태를 보존한 transaction에서 새 forward revision 후보 생성. HEAD rewind/무조건 overwrite/partial apply 금지</span></div>
+                  <div class="setting"><b>6 · Read-back</b><span>candidate 재읽기 + 구조/해시/scope 검증 성공 시에만 canonical revision 확정</span></div>
+                </div>
+                <div class="card tight softblue" data-p04-1-restore-preview="desktop" data-preview-before-mutation="required">
+                  <div class="row"><strong>Restore Preview layer</strong><span class="badge">검사 후 표시</span></div>
+                  <div class="small">백업 생성일 · backup/schema/runtime 버전 · 포함 범위 · integrity/Persona dependency · 현재 verified canonical HEAD 보존 상태 · 새 forward revision 적용 계획을 한 화면에서 확인.</div>
+                </div>
+                <div class="buttons"><button type="button" class="btn">선택한 백업 검사</button><button type="button" class="btn primary disabled" aria-disabled="true">Preview 확인 후 복원 승인</button></div>
+                <div class="note dangerline"><strong>FAIL CLOSED</strong> · unsupported/future schema, adapter 부재, integrity 불일치, staging/read-back 실패 시 canonical 확정 금지. 기존 verified canonical state 100% 유지 + 읽을 수 있는 Recovery / Raw Recovery Export 경로 보존.</div>
+                <div class="note">Remote notice/update는 advisory only이며 Restore mutation authority가 아니다. 로컬 결정적 검증 + 사용자 명시 승인만 적용 gate가 된다.</div>
+              </div>
+              <!-- P-04-1 RESTORE PATH PATCH END · desktop -->
+              <!-- P-04-2 FORWARD ROLLBACK PATCH START · desktop -->
+              <div class="card" data-p04-2-forward-rollback="desktop" data-rollback-entry="manage/data-safety/forward-rollback" data-rollback-target-authority="revision-id" data-rollback-commit-model="copy-target-state-new-forward-revision-readback" data-rollback-head-policy="no-rewind-no-overwrite" data-rollback-failure="fail-closed-preserve-verified-head" data-p04-3-replica-conflict="out-of-scope">
+                <div class="row"><strong>Forward Rollback · 과거 상태를 새 revision으로 복구</strong><span class="badge">P-04-2</span></div>
+                <div class="note">단일 경로: [관리] → [Data Safety] → [Forward Rollback]. revision_id가 실제 target authority이며 날짜는 보조 표시. 현재 HEAD rewind/overwrite 금지. P-04-3 Replica Conflict는 미구현 상태를 유지.</div>
+                <div class="setting-grid">
+                  <div class="setting"><b>1 · Target 선택</b><span><select id="p04-desktop-rollback-target" aria-label="Forward Rollback 대상 revision 선택"><option value="">검증된 과거 revision 선택</option><option value="example-rev94">예시 · rev94 · 2026-08-10 · verified</option></select> · revision_id 기준</span></div>
+                  <div class="setting"><b>2 · Target 검사</b><span>revision 존재/가독성 · verified history · snapshot/lineage metadata 재구성 가능 여부 확인</span></div>
+                  <div class="setting"><b>3 · Preview</b><span>현재 HEAD · rollback_target · 변경 scope · 새 revision 계획 · lineage · 금지 동작 표시</span></div>
+                  <div class="setting"><b>4 · 명시 승인</b><span>검사 PASS + Preview 확인 후 사용자가 직접 실행. 승인 전 canonical mutation 금지</span></div>
+                  <div class="setting"><b>5 · New forward revision</b><span>parent=현재 verified HEAD, rollback_target=선택 revision. 과거 payload를 source로 새 candidate 생성</span></div>
+                  <div class="setting"><b>6 · Read-back</b><span>payload/metadata/lineage/target/scope 재검증 성공 시에만 새 candidate를 canonical HEAD로 확정</span></div>
+                </div>
+                <div class="card tight softblue" data-p04-2-rollback-preview="desktop" data-preview-before-mutation="required">
+                  <div class="row"><strong>Forward Rollback Preview layer</strong><span class="badge">검사 후 표시</span></div>
+                  <div class="small">현재 verified HEAD와 선택한 rollback_target의 차이, 새 forward revision candidate의 적용 범위, parent/rollback_target lineage metadata를 한 화면에서 확인. HEAD rewind · 기존 revision overwrite · revision 번호만으로 자동 선택 · partial apply 금지.</div>
+                </div>
+                <div class="buttons"><button type="button" class="btn">선택한 revision 검사</button><button type="button" class="btn primary disabled" aria-disabled="true">Preview 확인 후 Forward Rollback 실행</button></div>
+                <div class="note dangerline"><strong>FAIL CLOSED</strong> · target read/Preview/staging/metadata/read-back 중 하나라도 실패하면 새 revision 확정 금지. 기존 verified HEAD/state 100% 유지.</div>
+                <div class="note">이 경로는 P-04-2 Forward Rollback만 다룬다. Replica Conflict 판단·자동 merge·incoming 선택은 P-04-3 전까지 수행하지 않는다.</div>
+              </div>
+              <!-- P-04-2 FORWARD ROLLBACK PATCH END · desktop -->
+              <!-- P-04-3 REPLICA CONFLICT PATCH START · desktop -->
+              <div class="card" data-p04-3-replica-conflict="desktop" data-conflict-entry="manage/data-safety/conflict" data-conflict-replica-identity="storage-container-replica-id" data-conflict-auto-overwrite="forbidden" data-conflict-auto-merge="forbidden" data-conflict-commit-model="explicit-branch-new-forward-revision-readback" data-conflict-failure="fail-closed-preserve-verified-head">
+                <div class="row"><strong>Replica Conflict · Current Local / Incoming Replica</strong><span class="badge">P-04-3</span></div>
+                <div class="note">단일 경로: [관리] → [Data Safety] → [Conflict]. replica_id는 저장 컨테이너 식별자이며 물리 기기와 1:1이라고 가정하지 않는다. lineage가 갈라지면 자동 latest-wins를 금지하고 사용자 선택을 요구한다.</div>
+                <div class="setting-grid">
+                  <div class="setting"><b>1 · Conflict 감지</b><span>local/incoming replica_id · HEAD · lineage 비교. timestamp/revision 숫자만으로 자동 overwrite 금지</span></div>
+                  <div class="setting"><b>2 · Preview</b><span>Current Local / Incoming Replica의 HEAD · lineage · 충돌 scope · provenance를 한 화면에서 비교</span></div>
+                  <div class="setting"><b>3 · 분기 선택</b><span>Current Local 유지 또는 Incoming Replica 선택. unsafe automatic merge 없음</span></div>
+                  <div class="setting"><b>4 · 명시 승인</b><span>Preview + 분기 선택 뒤 사용자 직접 승인. 승인 전 canonical mutation 금지</span></div>
+                  <div class="setting"><b>5 · New forward revision</b><span>선택 payload를 source로 새 resolution candidate 생성. parent=현재 verified HEAD + conflict provenance 보존</span></div>
+                  <div class="setting"><b>6 · Read-back</b><span>payload/conflict metadata/lineage/selected branch/scope 검증 성공 시에만 새 HEAD 확정</span></div>
+                </div>
+                <div class="card tight softblue" data-p04-3-conflict-preview="desktop" data-preview-before-mutation="required">
+                  <div class="row"><strong>Conflict UI layer</strong><span class="badge">CONFLICT</span></div>
+                  <div class="small">Current Local과 Incoming Replica의 현재 HEAD, replica_id, lineage, 충돌 범위와 차이를 비교한다. 날짜·revision 번호는 설명 정보일 뿐 자동 선택 authority가 아니다.</div>
+                </div>
+                <div class="setting-grid">
+                  <label class="setting"><b>Current Local 유지</b><span><input id="p04-desktop-conflict-local" name="p04-desktop-conflict-choice" type="radio" value="current-local"> local payload → 새 forward resolution revision</span></label>
+                  <label class="setting"><b>Incoming Replica 선택</b><span><input id="p04-desktop-conflict-incoming" name="p04-desktop-conflict-choice" type="radio" value="incoming-replica"> incoming payload → 새 forward resolution revision</span></label>
+                </div>
+                <div class="buttons"><button type="button" class="btn">Conflict 다시 검사</button><button type="button" class="btn primary disabled" aria-disabled="true">선택한 분기로 Conflict 해결 승인</button></div>
+                <div class="note dangerline"><strong>FAIL CLOSED</strong> · 검사/Preview/선택/staging/metadata/read-back 중 하나라도 실패하면 resolution revision 확정 금지. 기존 verified HEAD/state 100% 유지 + Recovery/Export 경로 보존.</div>
+                <div class="note">silent latest-wins · 더 큰 revision 우선 · 기존 revision overwrite · 다른 lineage로 HEAD 직접 이동 · unsafe automatic merge를 금지한다.</div>
+              </div>
+              <!-- P-04-3 REPLICA CONFLICT PATCH END · desktop -->
+              <div class="card"><strong>Legacy Continuity / Migration</strong><div class="small">기록/history · JSON inspect/preview/apply · legacy Sensitive · named presets</div></div>
+              <div class="card" data-p03-controller-settings="desktop"><strong>Controller Settings</strong><div class="buttons"><button type="button" class="btn">컨트롤러 설정 내보내기</button><button type="button" class="btn">컨트롤러 설정 가져오기</button></div><div class="small">Canonical Recovery와 별도인 legacy controller settings 경로</div></div>
+              <div class="card tight softblue" data-p03a-import-safety="desktop"><strong>Import Safety Contract · REQUIRED</strong><div class="small">file → JSON parse + schema/format/version validation → created_at/version/scope Preview → explicit user approval → preserve-current staging/transaction → read-back verification → commit only after verified success</div><div class="note">검증 실패/미지원 schema/부분 적용 오류면 FAIL CLOSED. 기존 verified Controller Settings 유지. Canonical USER_STATE · Learning · Memory · Recovery 영역은 이 Import가 변경하지 않음.</div></div>
+              <!-- P-05 ADVANCED RESERVED ROUTES PATCH START · desktop -->
+              <div class="card reserved" data-p05-advanced-reserved="desktop" data-p05-route="manage/advanced" data-p05-mutation-authority="none" data-p05-failure="fail-closed-preserve-verified-state">
+                <div class="row"><strong>Advanced · RESERVED</strong><span class="badge">P-05</span></div>
+                <div class="note">단일 경로: [관리] → [Advanced]. 미래 기능의 진입점과 namespace boundary만 예약한다. 이 route 자체에는 USER_STATE / PERSONA mutation authority가 없으며 cross-namespace direct write를 허용하지 않는다.</div>
+                <div class="setting-grid">
+                  <div class="setting" data-p05-appearance="deferred-preserve"><b>Appearance / 화면 꾸미기</b><span>[DEFERRED-PRESERVE] · 실제 theme engine과 persistent style mutation은 구현하지 않는다. 향후 자체 feature namespace / capability / migration ownership 경계에서만 확장한다.</span></div>
+                  <div class="setting" data-p05-data-portability="deferred-preserve"><b>Data Portability / 선택적 Export·Reset</b><span>[DEFERRED-PRESERVE] · 실제 Export engine, Reset, 삭제, 초기화는 구현하지 않는다. 향후 Preview · warning · explicit user approval boundary 자리만 예약한다.</span></div>
+                </div>
+                <div class="note dangerline"><strong>FAIL CLOSED</strong> · capability / schema / migration adapter가 확인되지 않거나 unsupported/future version이면 현재 verified state와 사용자 데이터 원본을 그대로 유지한다. 부분 적용 · silent fallback mutation · destructive operation을 하지 않는다.</div>
+              </div>
+              <!-- P-05 ADVANCED RESERVED ROUTES PATCH END · desktop -->
+              <div class="card"><strong>System / Capability</strong><div class="small">Persona · manual handoff · Project/Memory assist · Voice support · storage/network</div></div>
+              <div class="card tight" data-p03-indexeddb-diagnostic="desktop"><strong>Storage / IndexedDB</strong><div class="buttons"><button type="button" class="btn">실기기 IndexedDB 진단 열기</button></div><div class="small">real-device storage diagnostic route</div></div>
+              <div class="card tight"><strong>Global</strong><div class="small">Auto/KO/JA/EN · first-use · HTTPS/local · update notice</div></div>
+              <div class="card danger"><strong>PURGE</strong><div class="small">위험 작업은 물리 분리 · Recovery 이후에만</div></div>
+            </section>
+
+            <div class="degraded span2"><div class="row"><strong>DEGRADED GLOBAL SLOT</strong><span class="badge">P6</span></div><div class="small">IndexedDB blocked/versionchange/quota/write 실패 → false-save 금지 · 기존 verified state 유지 · read-only Recovery/Export · 안전한 경우 임시 conversation-only 모드.</div></div>
+          </main>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="audit">
+    <h3>R-01C v2 Preservation / Placement Check</h3>
+    <table>
+      <tr><th>검수 항목</th><th>v2 표현</th><th>후보 판정</th></tr>
+      <tr><td>4 top-level anchors</td><td>시작 / 학습 / 기억 / 관리만 사용</td><td class="pass">PASS-C</td></tr>
+      <tr><td>모바일·PC 기능 동등성</td><td>같은 Quick Start 9종 + 복원 shortcut + 동일 상세축</td><td class="pass">PASS-C</td></tr>
+      <tr><td>CORE-A 대화 설정 전체</td><td>Era / Scene / Activity / Relationship / State / Language / Support / Initiative를 펼친 상태로 명시</td><td class="pass">PASS-C</td></tr>
+      <tr><td>CORE-B 정서 지원</td><td>‘오늘 좀 들어줘’ 1탭 복원 + Support Style 전체 유지</td><td class="pass">PASS-C</td></tr>
+      <tr><td>late_teens + 음주 안전</td><td>Era 복원 + 차단 규칙 명시</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Random semantics</td><td>Quick Random과 random_recommend를 별도 표현</td><td class="pass">PASS-C</td></tr>
+      <tr><td>일본어 장기 성장</td><td>현재 수준 Auto/N5→N1+와 세션 난이도를 분리</td><td class="pass">PASS-C</td></tr>
+      <tr><td>difficulty override / 학습 세부상태</td><td>Advanced와 학습 프로필에 보존 위치 명시</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Learning Capture + fallback</td><td>Learning 첫 action + Study contextual route + plain-note fallback</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Calendar / Practice</td><td>물리적 reserved card + Calendar 미래 attendance CTA 자리</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Journal / Export</td><td>CRUD/search + MD/TXT + selectable-text fallback</td><td class="pass">PASS-C</td></tr>
+      <tr><td>함께한 지 N일</td><td>전역 compact identity strip + 숫자 뒤 은은한 단일 sparkle</td><td class="pass">PASS-C / VISUAL RESTORE</td></tr>
+      <tr><td>화면 언어</td><td>Auto / 한국어 / 日本語 / English 복원</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Voice & Reaction</td><td>Start first-class reserved entry; Manage에는 diagnostics만</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Private Session</td><td>Start single editable authority</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Legacy Continuity</td><td>Manage migration path로 유지; Canonical이 있다고 자동 삭제하지 않음</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Sensitive controls 분리</td><td>Legacy Continuity / Canonical Memory / Recovery Backup 3개 opt-in을 독립적으로 표시</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Canonical correction flow</td><td>기존 editable sandbox → validate → preview → approve → atomic commit 유지</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Controller utility</td><td>Copy/Open/manual copy + 세션 명령 Preview 복원</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Degraded storage</td><td>전역 배너 + read-only recovery + temporary conversation-only 경로</td><td class="pass">PASS-C</td></tr>
+      <tr><td>모바일 접근성</td><td>Quick Start 54px+, preset 50px+, anchor/primary 48px+ 후보. 기능 삭제 대신 accordion/secondary surface 사용</td><td class="pending">VISUAL/DEVICE REVIEW NEEDED</td></tr>
+      <tr><td>감성 디자인 + 가독성</td><td>하늘색 우세 airy pastel + 핑크 포인트 / 넉넉한 터치 타깃 / 둥근 형태 / 시스템 sans 기반 명료한 본문 / 과한 장식·저가독성 폰트 금지</td><td class="pending">R-01D REVIEW</td></tr>
+      <tr><td>H-02 Freeze</td><td>본 파일은 배치 후보이며 사용자 모바일/PC 검수 전</td><td class="block">BLOCKED</td></tr>
+    </table>
+
+    <h4>R-01E 데스크톱 / Cross-view 검수</h4>
+    <table>
+      <tr><th>항목</th><th>v2.5 판정</th><th>결과</th></tr>
+      <tr><td>Quick Start parity</td><td>모바일/PC 모두 동일 9종</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Restored one-tap presets</td><td>밤전화 / 오늘 좀 들어줘 / 한잔하자 / 랜덤 추천 모두 양쪽에 존재</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Conversation axes</td><td>Era/Scene/Activity/Relationship/State/Language/Support/Initiative + Learning/Immersion + Advanced 보존</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Learning parity</td><td>Capture / Calendar slot / N5→N1+ / Practice slot / review / Journal / Export 경로 유지</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Memory parity</td><td>Lifecycle / Correction Sandbox / Memory Sensitive 접근 유지</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Manage parity</td><td>Recovery / Raw / Rollback / Transfer / Legacy / Capability / Global / PURGE 유지</td><td class="pass">PASS-C</td></tr>
+      <tr><td>3 Sensitive opt-ins</td><td>Continuity / Memory / Recovery Backup 독립 표시</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Desktop hierarchy</td><td>2-column canvas + 4-anchor rail. 저빈도 Manage가 Start/Learning보다 시각 우선하지 않음</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Review-page responsive behavior</td><td>1200px 이하에서는 비교 패널을 세로로 전환하여 artifact 자체의 가로 overflow 위험 축소</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Actual device/browser behavior</td><td>실제품 구현 후 Windows Chrome + mobile canary 필요</td><td class="pending">R-10 VERIFY</td></tr>
+    </table>
+
+    <h4>R-01B 결정 반영 상태</h4>
+    <table>
+      <tr><th>결정군</th><th>반영</th></tr>
+      <tr><td>KEEP</td><td>현행 9 Quick Start, 전체 상세 대화축, Favorites 기능, NOW PLAYING, Utility, Continuity, Canonical correction, Global 상태</td></tr>
+      <tr><td>RESTORE</td><td>밤전화, 오늘 좀 들어줘, 한잔하자, late_teens, random_recommend, default shortcut 접근, 세션 명령 Preview</td></tr>
+      <tr><td>MIGRATE/PRESERVE</td><td>named saved presets, legacy Voice preference, Legacy Continuity → Canonical migration source</td></tr>
+      <tr><td>DEFERRED-PRESERVE</td><td>full Voice/Reaction engine, Calendar engine, Practice engine, latent legacy scene capabilities</td></tr>
+      <tr><td>USER-APPROVED REMOVAL</td><td>0건</td></tr>
+    </table>
+    <h4>R-01D 모바일 실사용 보완</h4>
+    <table>
+      <tr><th>항목</th><th>v2.4 반영</th><th>판정</th></tr>
+      <tr><td>타이포그래피</td><td>B안 확정 · brand 17 / section 16 / action 14 / preset 13.5 / setting 13 / support 12.5 / note 12 / meta 11px</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Quick Start 터치</td><td>54px visual target</td><td class="pass">PASS-C</td></tr>
+      <tr><td>일반 action</td><td>48px</td><td class="pass">PASS-C</td></tr>
+      <tr><td>action chip</td><td>34px → 44px visual, 실제 구현 hit area 48×48px 이상 계약</td><td class="pass">PASS-C</td></tr>
+      <tr><td>화면 언어</td><td>34px → 48px</td><td class="pass">PASS-C</td></tr>
+      <tr><td>보조 텍스트 대비</td><td>muted #758391 → #657582</td><td class="pass">PASS-C</td></tr>
+      <tr><td>좁은 화면 header</td><td>영문 보조 라벨 없이 `함께한 지 N일` + 단일 sparkle을 유지</td><td class="pass">PASS-C</td></tr>
+      <tr><td>세부 설정 밀도</td><td>실제 모바일 기본은 접힘. 펼친 상태는 Preservation 검수 전용</td><td class="pass">PASS-C</td></tr>
+      <tr><td>검수용 라벨</td><td>CORE/KEEP/RESTORE/RESERVED는 제품 UI 미노출 계약</td><td class="pass">PASS-C</td></tr>
+      <tr><td>Safe Area / 200% text / VoiceOver·TalkBack</td><td>실제 제품 구현 및 실기기 canary에서 검증</td><td class="pending">R-10 VERIFY</td></tr>
+    </table>
+    <div class="note" style="margin-top:9px"><b>PASS-C</b>는 wireframe contract candidate 판정일 뿐이다. 다음 단계는 모바일 구조/기능 누락/first viewport/tap depth 검수와 데스크톱 밀도·hierarchy 검수이며, 사용자가 명시 승인하기 전 H-02는 BLOCKED 상태를 유지한다.</div>
+  </section>
+</div>
+</body>
+</html>
